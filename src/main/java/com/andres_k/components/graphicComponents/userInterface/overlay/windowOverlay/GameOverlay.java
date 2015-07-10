@@ -77,6 +77,11 @@ public class GameOverlay extends Overlay {
         this.initTableMenuSettings();
     }
 
+    @Override
+    public void enter() {
+        this.initTableMenuControls();
+    }
+
     private void initTableNewRound() {
         InterfaceElement tableNewRound = this.elements.get(EnumOverlayElement.TABLE_ROUND_NEW);
         tableNewRound.doTask(new ImageElement(this.animatorOverlayData.getAnimator(EnumOverlayElement.NEW_GAME), EnumOverlayElement.NEW_GAME.getValue() + ":" + EnumOverlayElement.NEW_GAME.getValue(), Element.PositionInBody.MIDDLE_UP));
@@ -106,6 +111,7 @@ public class GameOverlay extends Overlay {
         tableMenuControls.doTask(new ButtonElement(new StringElement(new StringTimer("Controls"), Color.black,
                 EnumOverlayElement.CONTROLS.getValue() + ":" + EnumOverlayElement.CONTROLS.getValue(), Element.PositionInBody.MIDDLE_MID), EnumOverlayElement.BUTTON));
 
+        tableMenuControls.doTask(new Pair<>("clear", EnumOverlayElement.CONTROLS.getValue() + ":" + EnumOverlayElement.CONTROLS.getValue()));
         for (Map.Entry<EnumInput, String> entry : InputData.getAvailableInput().entrySet()) {
             tableMenuControls.doTask(new ButtonElement(new StringElement(new StringTimer(entry.getKey().getValue() + ":" +
                     StringTools.duplicateString(" ", 14 - entry.getKey().getValue().length()) + entry.getValue() +

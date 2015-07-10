@@ -63,6 +63,7 @@ public class WindowGame extends WindowBasedGame {
         this.container.setVSync(false);
 
         WindowConfig.initWindow2();
+        this.overlay.enter();
         this.controller.enter();
         GlobalVariable.appGameContainer.setDisplayMode(WindowConfig.getIntSizeX(), WindowConfig.getIntSizeY(), false);
     }
