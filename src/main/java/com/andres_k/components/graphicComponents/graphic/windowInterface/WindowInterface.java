@@ -7,10 +7,13 @@ import com.andres_k.components.graphicComponents.input.EnumInput;
 import com.andres_k.components.graphicComponents.input.InputData;
 import com.andres_k.components.graphicComponents.userInterface.overlay.windowOverlay.InterfaceOverlay;
 import com.andres_k.components.taskComponent.GenericSendTask;
+import com.andres_k.utils.configs.Config;
 import com.andres_k.utils.configs.WindowConfig;
-import com.andres_k.utils.tools.Debug;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -28,7 +31,7 @@ public class WindowInterface extends WindowBasedGame {
         interfaceTask.addObserver(this.controller);
         this.controller.addObserver(interfaceTask);
 
-        InputData inputData = new InputData("configInput.json");
+        InputData inputData = new InputData(Config.input);
         this.overlay = new InterfaceOverlay(inputData);
         interfaceTask.addObserver(this.overlay);
         this.overlay.addObserver(interfaceTask);
