@@ -65,11 +65,9 @@ public class WindowInterface extends WindowBasedGame {
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
 
-        MusicController.loop(EnumSound.BACKGROUND);
-        WindowConfig.initWindow1();
         this.overlay.enter();
         this.controller.enter();
-        GlobalVariable.appGameContainer.setDisplayMode(WindowConfig.getIntSizeX(), WindowConfig.getIntSizeY(), false);
+        GlobalVariable.appGameContainer.setDisplayMode(WindowConfig.getW1SizeX(), WindowConfig.getW1SizeY(), false);
 
     }
 
@@ -84,7 +82,7 @@ public class WindowInterface extends WindowBasedGame {
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
         graphics.setColor(Color.gray);
-        graphics.fillRect(0, 0, WindowConfig.getSizeX(), WindowConfig.getSizeY());
+        graphics.fillRect(0, 0, WindowConfig.w1_sX, WindowConfig.w1_sY);
         this.controller.renderWindow(graphics);
         this.overlay.draw(graphics);
     }
