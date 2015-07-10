@@ -10,14 +10,15 @@ import org.newdawn.slick.SpriteSheet;
 public abstract class AnimatorFactory {
     public abstract Animator getAnimator(EnumSprites index) throws SlickException;
 
-    protected Animation loadAnimation(SpriteSheet spriteSheet, boolean looping, int startX, int endX, int startY, int endY, int speed) {
+    protected Animation loadAnimation(SpriteSheet spriteSheet, boolean lopping, int startX, int endX, int startY, int endY, int speed) {
         Animation animation = new Animation();
         for (int y = startY; y < endY; y++) {
             for (int x = startX; x < endX; x++) {
                 animation.addFrame(spriteSheet.getSprite(x, y), speed);
             }
+
         }
-        animation.setLooping(looping);
+        animation.setLooping(lopping);
         return animation;
     }
 }

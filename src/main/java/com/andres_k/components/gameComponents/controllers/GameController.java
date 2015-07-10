@@ -1,12 +1,19 @@
 package com.andres_k.components.gameComponents.controllers;
 
+import com.andres_k.components.gameComponents.animations.AnimatorGameData;
 import com.andres_k.components.graphicComponents.graphic.EnumWindow;
+import com.andres_k.components.graphicComponents.input.EnumInput;
+import com.andres_k.components.graphicComponents.input.InputData;
+import com.andres_k.components.graphicComponents.input.InputGame;
 import com.andres_k.components.graphicComponents.userInterface.overlay.EnumOverlayElement;
+import com.andres_k.components.networkComponents.messages.MessageGameNew;
 import com.andres_k.components.taskComponent.EnumTargetTask;
+import com.andres_k.utils.configs.Config;
 import com.andres_k.utils.stockage.Tuple;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
 import java.util.Observable;
 
@@ -14,8 +21,13 @@ import java.util.Observable;
  * Created by andres_k on 08/07/2015.
  */
 public class GameController extends WindowController {
+    private AnimatorGameData animatorGameData;
+    private InputGame inputGame;
 
     public GameController() throws JSONException {
+        this.animatorGameData = new AnimatorGameData();
+
+        this.inputGame = new InputGame(new InputData(Config.input));
     }
 
     @Override
@@ -27,7 +39,8 @@ public class GameController extends WindowController {
     }
 
     @Override
-    public void init() {
+    public void init() throws SlickException {
+        this.animatorGameData.init();
     }
 
     @Override
@@ -40,10 +53,12 @@ public class GameController extends WindowController {
 
     @Override
     public void keyPressed(int key, char c) {
+        int result = this.inputGame.checkInput(key, EnumInput.PRESSED);
     }
 
     @Override
     public void keyReleased(int key, char c) {
+        int result = this.inputGame.checkInput(key, EnumInput.RELEASED);
     }
 
     @Override
@@ -65,6 +80,10 @@ public class GameController extends WindowController {
                     if (received.getV3() == EnumOverlayElement.EXIT) {
                         this.window.quit();
                     }
+                } else if (received.getV3() instanceof MessageGameNew){
+
+                    // TODO utilise pour init ta game (create player ext)
+                    this.stateWindow.enterState(EnumWindow.GAME.getValue());
                 }
             }
         }

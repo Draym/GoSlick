@@ -5,16 +5,15 @@ import com.andres_k.components.gameComponents.controllers.InterfaceController;
 import com.andres_k.components.graphicComponents.graphic.WindowBasedGame;
 import com.andres_k.components.graphicComponents.input.EnumInput;
 import com.andres_k.components.graphicComponents.input.InputData;
+import com.andres_k.components.graphicComponents.sounds.EnumSound;
+import com.andres_k.components.graphicComponents.sounds.MusicController;
 import com.andres_k.components.graphicComponents.userInterface.overlay.windowOverlay.InterfaceOverlay;
 import com.andres_k.components.taskComponent.GenericSendTask;
 import com.andres_k.utils.configs.Config;
+import com.andres_k.utils.configs.GlobalVariable;
 import com.andres_k.utils.configs.WindowConfig;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -55,6 +54,7 @@ public class WindowInterface extends WindowBasedGame {
         this.controller.setStateWindow(this.stateWindow);
         this.controller.setWindow(this);
         this.controller.init();
+
     }
 
 
@@ -65,21 +65,25 @@ public class WindowInterface extends WindowBasedGame {
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
 
+        MusicController.loop(EnumSound.BACKGROUND);
+        WindowConfig.initWindow1();
         this.controller.enter();
+        GlobalVariable.appGameContainer.setDisplayMode(WindowConfig.getIntSizeX(), WindowConfig.getIntSizeY(), false);
+
     }
 
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+        MusicController.stop(EnumSound.BACKGROUND);
         this.controller.leave();
         this.clean();
     }
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
-        graphics.setColor(new Color(0.3f, 0.3f, 0.3f));
-        graphics.fill(new Rectangle(0, 0, WindowConfig.getSizeX(), WindowConfig.getSizeY()));
-
+        graphics.setColor(Color.gray);
+        graphics.fillRect(0, 0, WindowConfig.getSizeX(), WindowConfig.getSizeY());
         this.controller.renderWindow(graphics);
         this.overlay.draw(graphics);
     }

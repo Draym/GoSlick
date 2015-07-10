@@ -29,8 +29,8 @@ public class AnimatorOverlayData {
     }
 
     public void initRound() throws SlickException {
-        this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.NEW_ROUND), EnumOverlayElement.NEW_ROUND);
-        this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.END_ROUND), EnumOverlayElement.END_ROUND);
+        this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.NEW_GAME), EnumOverlayElement.NEW_GAME);
+        this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.END_GAME), EnumOverlayElement.END_GAME);
         this.addRoundAnimator(this.animatorFactory.getAnimator(EnumSprites.TIMER), EnumOverlayElement.TIMER);
     }
 
@@ -45,6 +45,7 @@ public class AnimatorOverlayData {
         this.addMenuAnimator(this.animatorFactory.getAnimator(EnumSprites.NEW), EnumOverlayElement.NEW);
         this.addMenuAnimator(this.animatorFactory.getAnimator(EnumSprites.GO), EnumOverlayElement.GO);
         this.addMenuAnimator(this.animatorFactory.getAnimator(EnumSprites.SAVE), EnumOverlayElement.SAVE);
+        this.addMenuAnimator(this.animatorFactory.getAnimator(EnumSprites.SCORE), EnumOverlayElement.SCORE);
     }
 
     public void addRoundAnimator(Animator roundAnimator, EnumOverlayElement type) {
@@ -60,16 +61,16 @@ public class AnimatorOverlayData {
     }
 
     // GETTERS
-    public Animator getRoundAnimator(EnumOverlayElement index) {
-        return new Animator(this.roundAnimator.get(index));
-    }
 
-    public Animator getIconAnimator(EnumOverlayElement index) {
-        return new Animator(this.iconAnimator.get(index));
-    }
-
-    public Animator getMenuAnimator(EnumOverlayElement index) {
-        return new Animator(this.menuAnimator.get(index));
+    public Animator getAnimator(EnumOverlayElement index) {
+        if (this.iconAnimator.containsKey(index)) {
+            return new Animator(this.iconAnimator.get(index));
+        } else if (this.menuAnimator.containsKey(index)) {
+            return new Animator(this.menuAnimator.get(index));
+        } else if (this.roundAnimator.containsKey(index)) {
+            return new Animator(this.roundAnimator.get(index));
+        }
+        return null;
     }
 }
 

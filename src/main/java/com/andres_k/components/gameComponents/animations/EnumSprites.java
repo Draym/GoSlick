@@ -7,15 +7,15 @@ package com.andres_k.components.gameComponents.animations;
 public enum EnumSprites {
     //index
     NOTHING(0),
+    ITEM(1),
     ROUND(6),
     MENU(7),
 
     //roundOverlay
-    NEW_ROUND(ROUND.getIndex()), END_ROUND(ROUND.getIndex()), TIMER(ROUND.getIndex()),
+    NEW_GAME(ROUND.getIndex()), END_GAME(ROUND.getIndex()), TIMER(ROUND.getIndex()),
     //menuOverlay
     EXIT(MENU.getIndex()), SETTINGS(MENU.getIndex()), CONTROLS(MENU.getIndex()), SCREEN(MENU.getIndex()),
-    NEW(MENU.getIndex()), GO(MENU.getIndex()), SAVE(MENU.getIndex());
-
+    NEW(MENU.getIndex()), GO(MENU.getIndex()), SAVE(MENU.getIndex()), SCORE(MENU.getIndex());
 
     private final int index;
 
