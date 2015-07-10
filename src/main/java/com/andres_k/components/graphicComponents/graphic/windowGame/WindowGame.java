@@ -5,14 +5,15 @@ import com.andres_k.components.gameComponents.controllers.GameController;
 import com.andres_k.components.graphicComponents.graphic.EnumWindow;
 import com.andres_k.components.graphicComponents.graphic.WindowBasedGame;
 import com.andres_k.components.graphicComponents.input.EnumInput;
-import com.andres_k.components.graphicComponents.input.InputData;
 import com.andres_k.components.graphicComponents.userInterface.overlay.windowOverlay.GameOverlay;
 import com.andres_k.components.taskComponent.GenericSendTask;
-import com.andres_k.utils.configs.Config;
 import com.andres_k.utils.configs.GlobalVariable;
 import com.andres_k.utils.configs.WindowConfig;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.*;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -29,8 +30,7 @@ public class WindowGame extends WindowBasedGame {
         interfaceTask.addObserver(this.controller);
         this.controller.addObserver(interfaceTask);
 
-        InputData inputData = new InputData(Config.input);
-        this.overlay = new GameOverlay(inputData);
+        this.overlay = new GameOverlay();
         interfaceTask.addObserver(this.overlay);
         this.overlay.addObserver(interfaceTask);
     }
