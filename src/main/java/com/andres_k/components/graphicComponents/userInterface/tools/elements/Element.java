@@ -1,15 +1,16 @@
 package com.andres_k.components.graphicComponents.userInterface.tools.elements;
 
 import com.andres_k.components.graphicComponents.userInterface.overlay.EnumOverlayElement;
-import com.andres_k.components.graphicComponents.userInterface.tools.items.BodyRect;
+import com.andres_k.components.graphicComponents.userInterface.tools.items.ColorRect;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
 /**
  * Created by andres_k on 27/06/2015.
  */
 public abstract class Element {
-    protected BodyRect body;
+    protected ColorRect body;
     protected String id;
     protected EnumOverlayElement type;
     protected PositionInBody position;
@@ -20,7 +21,7 @@ public abstract class Element {
         LEFT_DOWN, MIDDLE_DOWN, RIGHT_DOWN
     }
 
-    protected void init(BodyRect body, String id, PositionInBody position, EnumOverlayElement type){
+    protected void init(ColorRect body, String id, PositionInBody position, EnumOverlayElement type){
         this.body = body;
         this.id = id;
         this.position = position;
@@ -31,11 +32,11 @@ public abstract class Element {
 
     public abstract void draw(Graphics g);
 
-    public abstract void draw(Graphics g, BodyRect body);
+    public abstract void draw(Graphics g, ColorRect body);
 
     public abstract void update();
 
-    public abstract boolean replace(Element element);
+    public abstract boolean replace(Element element) throws SlickException;
 
     public abstract Object doTask(Object task);
 
@@ -61,7 +62,7 @@ public abstract class Element {
         return this.type;
     }
 
-    public BodyRect getBody(){
+    public ColorRect getBody(){
         return this.body;
     }
 
@@ -85,7 +86,7 @@ public abstract class Element {
     }
 
     // SETTERS
-    public void setBody(BodyRect body){
+    public void setBody(ColorRect body){
         if (this.body != null) {
             if (body.getColor() == null){
                 body.setColor(this.body.getColor());
@@ -96,7 +97,7 @@ public abstract class Element {
 
     public void setBodyColor(Color color){
         if (this.body == null){
-            this.body = new BodyRect(null);
+            this.body = new ColorRect(null);
         }
         this.body.setColor(color);
     }

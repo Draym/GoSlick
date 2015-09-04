@@ -1,7 +1,9 @@
 package com.andres_k.components.graphicComponents.userInterface.tools.elements;
 
 import com.andres_k.components.graphicComponents.userInterface.overlay.EnumOverlayElement;
-import com.andres_k.components.graphicComponents.userInterface.tools.items.BodyRect;
+import com.andres_k.components.graphicComponents.userInterface.tools.items.ColorRect;
+import com.andres_k.components.taskComponent.EnumTask;
+import com.andres_k.utils.stockage.Pair;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
@@ -10,10 +12,19 @@ import org.newdawn.slick.Graphics;
  */
 public class ButtonElement extends Element {
     private Element element;
+    private EnumOverlayElement target;
 
     public ButtonElement(Element element, EnumOverlayElement type) {
         this.element = element;
         this.type = type;
+        this.target = type;
+        this.id = element.getId();
+    }
+
+    public ButtonElement(Element element, EnumOverlayElement type, EnumOverlayElement target) {
+        this.element = element;
+        this.type = type;
+        this.target = target;
         this.id = element.getId();
     }
 
@@ -29,7 +40,7 @@ public class ButtonElement extends Element {
     }
 
     @Override
-    public void draw(Graphics g, BodyRect body) {
+    public void draw(Graphics g, ColorRect body) {
         this.element.draw(g, body);
     }
 
@@ -47,7 +58,11 @@ public class ButtonElement extends Element {
 
     @Override
     public Object doTask(Object task) {
-        return this.element.doTask(task);
+        if (task instanceof Pair && ((Pair) task).getV1() == EnumTask.GETTER && ((Pair) task).getV2().equals("target")) {
+            return this.target;
+        } else {
+            return this.element.doTask(task);
+        }
     }
 
     @Override
@@ -82,14 +97,14 @@ public class ButtonElement extends Element {
     }
 
     @Override
-    public BodyRect getBody() {
+    public ColorRect getBody() {
         return this.element.getBody();
     }
 
     @Override
     public Object isOnFocus(float x, float y) {
         if (this.element.isOnFocus(x, y) != null) {
-            return this.type;
+            return this.target;
         } else {
             return null;
         }
@@ -97,7 +112,7 @@ public class ButtonElement extends Element {
 
     // SETTERS
     @Override
-    public void setBody(BodyRect body) {
+    public void setBody(ColorRect body) {
         this.element.setBody(body);
     }
 

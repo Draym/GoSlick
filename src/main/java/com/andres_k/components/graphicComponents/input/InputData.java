@@ -1,5 +1,6 @@
 package com.andres_k.components.graphicComponents.input;
 
+import com.andres_k.utils.tools.ConsoleWrite;
 import com.andres_k.utils.tools.StringTools;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -17,6 +18,7 @@ public class InputData {
     private static String file;
 
     public static void init(String file) throws JSONException {
+        ConsoleWrite.debug("file: " + file);
         availableInput = new LinkedHashMap<>();
         configs = new JSONObject(StringTools.readFile(file));
         InputData.file = file;

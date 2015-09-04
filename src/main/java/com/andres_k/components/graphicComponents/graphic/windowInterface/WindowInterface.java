@@ -4,23 +4,24 @@ import com.andres_k.components.gameComponents.animations.AnimatorOverlayData;
 import com.andres_k.components.gameComponents.controllers.InterfaceController;
 import com.andres_k.components.graphicComponents.graphic.WindowBasedGame;
 import com.andres_k.components.graphicComponents.input.EnumInput;
-import com.andres_k.components.graphicComponents.sounds.EnumSound;
-import com.andres_k.components.graphicComponents.sounds.MusicController;
+import com.andres_k.components.soundComponents.EnumSound;
+import com.andres_k.components.soundComponents.MusicController;
 import com.andres_k.components.graphicComponents.userInterface.overlay.windowOverlay.InterfaceOverlay;
 import com.andres_k.components.taskComponent.GenericSendTask;
 import com.andres_k.utils.configs.GlobalVariable;
 import com.andres_k.utils.configs.WindowConfig;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * Created by andres_k on 08/07/2015.
  */
 public class WindowInterface extends WindowBasedGame {
+
+    private Animation background;
+    private Image logo;
+    private long delta;
 
     public WindowInterface(int idWindow, GenericSendTask interfaceTask) throws JSONException, SlickException {
         this.idWindow = idWindow;
@@ -46,25 +47,44 @@ public class WindowInterface extends WindowBasedGame {
         this.container = gameContainer;
         this.stateWindow = stateBasedGame;
 
-        this.animatorOverlay.init();
+        try {
+            this.animatorOverlay.init();
+        } catch (JSONException e) {
+            throw new SlickException(e.getMessage());
+        }
 
 
-        this.overlay.initElementsComponent(this.animatorOverlay);
+        try {
+            this.overlay.initElementsComponent(this.animatorOverlay);
+        } catch (Exception e) {
+            throw new SlickException(e.getMessage());
+        }
 
         this.controller.setStateWindow(this.stateWindow);
         this.controller.setWindow(this);
-        this.controller.init();
+        try {
+            this.controller.init();
+        } catch (JSONException e) {
+            throw new SlickException(e.getMessage());
+        }
 
+        this.background = new Animation();
+        this.background.addFrame(new Image("image/background/backgroundHome.png"), 300);
+        this.background.setLooping(false);
+        this.logo = new Image("image/background/logo.png");
     }
 
 
     @Override
     public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.container.setTargetFrameRate(60);
-        this.container.setShowFPS(false);
+        this.container.setShowFPS(GlobalVariable.showFps);
         this.container.setAlwaysRender(false);
         this.container.setVSync(false);
 
+        this.delta = 0;
+
+        MusicController.loop(EnumSound.BACKGROUND_HOME);
         this.overlay.enter();
         this.controller.enter();
         GlobalVariable.appGameContainer.setDisplayMode(WindowConfig.getW1SizeX(), WindowConfig.getW1SizeY(), false);
@@ -74,23 +94,28 @@ public class WindowInterface extends WindowBasedGame {
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
-        MusicController.stop(EnumSound.BACKGROUND);
+        MusicController.stop(EnumSound.BACKGROUND_HOME);
         this.controller.leave();
         this.clean();
     }
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
-        graphics.setColor(Color.gray);
-        graphics.fillRect(0, 0, WindowConfig.w1_sX, WindowConfig.w1_sY);
+        graphics.drawAnimation(this.background, 0, 0);
+        graphics.drawImage(this.logo, 20, 100);
         this.controller.renderWindow(graphics);
         this.overlay.draw(graphics);
     }
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
-        this.controller.updateWindow(gameContainer);
-        this.overlay.updateOverlay();
+        this.delta += i;
+
+        if (this.delta > 30) {
+            this.controller.updateWindow(gameContainer);
+            this.overlay.updateOverlay();
+            this.delta = 0;
+        }
     }
 
     @Override

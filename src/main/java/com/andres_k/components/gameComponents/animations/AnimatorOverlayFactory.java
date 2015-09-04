@@ -37,13 +37,18 @@ public class AnimatorOverlayFactory extends AnimatorFactory {
             animator.addAnimation(EnumAnimation.BASIC, animation2);
         } else if (index == EnumSprites.TIMER) {
             Animation animation = new Animation();
-            for (int i = 4; i > 0; --i) {
+            for (int i = 3; i > 0; --i) {
                 Image img = new Image("image/overlay/roundCounter" + String.valueOf(i) + ".png");
-                animation.addFrame(img, 1000);
+                animation.addFrame(img, 600);
             }
             Image img = new Image("image/overlay/roundGo.png");
             animation.addFrame(img, 1000);
             animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
+        } else if (index == EnumSprites.NEW_ROUND) {
+            Animation animation = new Animation();
+            Image img = new Image("image/overlay/newRound.png");
+            animation.addFrame(img, 150);
             animator.addAnimation(EnumAnimation.BASIC, animation);
         }
         return animator;
@@ -88,15 +93,50 @@ public class AnimatorOverlayFactory extends AnimatorFactory {
             animation.addFrame(img, 150);
             animation.setLooping(false);
             animator.addAnimation(EnumAnimation.BASIC, animation);
+        } else if (index == EnumSprites.NEXT) {
+            Animation animation = new Animation();
+            Image img = new Image("image/overlay/next.png");
+            animation.addFrame(img, 150);
+            animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
         } else if (index == EnumSprites.SAVE) {
             Animation animation = new Animation();
             Image img = new Image("image/overlay/save.png");
             animation.addFrame(img, 150);
             animation.setLooping(false);
             animator.addAnimation(EnumAnimation.BASIC, animation);
-        } else if (index == EnumSprites.SCORE) {
+        } else if (index == EnumSprites.HIGHSCORE) {
             Animation animation = new Animation();
-            Image img = new Image("image/overlay/score.png");
+            Image img = new Image("image/overlay/highScore.png");
+            animation.addFrame(img, 150);
+            animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
+        } else if (index == EnumSprites.TOPSCORE) {
+            Animation animation = new Animation();
+            Image img = new Image("image/overlay/topScore.png");
+            animation.addFrame(img, 150);
+            animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
+        } else if (index == EnumSprites.ALPHABET) {
+            animator = this.loadAlphabet();
+        }
+        return animator;
+    }
+
+    public Animator loadAlphabet() throws SlickException {
+        Animator animator = new Animator();
+        String alphabet = "abcdefghijklmnopqrstuvwxyz-";
+
+        for (int i = 0; i < 10; ++i) {
+            Animation animation = new Animation();
+            Image img = new Image("image/characters/numeric/" + String.valueOf(i) + ".png");
+            animation.addFrame(img, 150);
+            animation.setLooping(false);
+            animator.addAnimation(EnumAnimation.BASIC, animation);
+        }
+        for (int i = 0; i < alphabet.length(); ++i) {
+            Animation animation = new Animation();
+            Image img = new Image("image/characters/alphabet/" + alphabet.charAt(i) + ".png");
             animation.addFrame(img, 150);
             animation.setLooping(false);
             animator.addAnimation(EnumAnimation.BASIC, animation);

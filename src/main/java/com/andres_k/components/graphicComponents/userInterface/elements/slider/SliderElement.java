@@ -3,11 +3,12 @@ package com.andres_k.components.graphicComponents.userInterface.elements.slider;
 import com.andres_k.components.graphicComponents.userInterface.elements.InterfaceElement;
 import com.andres_k.components.graphicComponents.userInterface.overlay.EnumOverlayElement;
 import com.andres_k.components.graphicComponents.userInterface.tools.elements.Element;
-import com.andres_k.components.graphicComponents.userInterface.tools.items.BodyRect;
+import com.andres_k.components.graphicComponents.userInterface.tools.items.ColorRect;
 import com.andres_k.components.graphicComponents.userInterface.tools.listElements.ListElement;
 import com.andres_k.utils.stockage.Pair;
-import com.andres_k.utils.tools.Debug;
+import com.andres_k.utils.tools.ConsoleWrite;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,15 +56,15 @@ public class SliderElement extends InterfaceElement {
     }
 
     @Override
-    public void doTask(Object task) {
+    public void doTask(Object task) throws SlickException {
         if (task instanceof Pair && ((Pair) task).getV1() instanceof EnumOverlayElement && ((Pair) task).getV2() instanceof Element) {
 
             if (this.elements.containsKey(((Pair) task).getV1())) {
-                Debug.debug("Add new String: " + ((Element) ((Pair) task).getV2()).getType());
+                ConsoleWrite.debug("Add new String: " + ((Element) ((Pair) task).getV2()).getType());
                 this.elements.get(((Pair) task).getV1()).addToPrint(((Pair) task).getV2(), Element.PositionInBody.LEFT_MID);
             }
         } else if (task instanceof Pair && ((Pair) task).getV1() instanceof EnumOverlayElement && ((Pair) task).getV2() instanceof ListElement) {
-            Debug.debug("Add new List: " + ((Pair) task).getV2());
+            ConsoleWrite.debug("Add new List: " + ((Pair) task).getV2());
             ((ListElement) ((Pair) task).getV2()).getBody().setPrintable(false);
             this.elements.put((EnumOverlayElement) ((Pair) task).getV1(), (ListElement) ((Pair) task).getV2());
         } else {
@@ -158,7 +159,7 @@ public class SliderElement extends InterfaceElement {
     }
 
     @Override
-    public BodyRect getBody() {
+    public ColorRect getBody() {
         return this.interfaceElement.getBody();
     }
 

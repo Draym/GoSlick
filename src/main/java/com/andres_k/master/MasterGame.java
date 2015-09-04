@@ -1,13 +1,15 @@
 package com.andres_k.master;
 
 
+import com.andres_k.components.gameComponents.controllers.ScoreData;
 import com.andres_k.components.graphicComponents.graphic.Windows;
 import com.andres_k.components.graphicComponents.input.InputData;
-import com.andres_k.components.graphicComponents.sounds.MusicController;
-import com.andres_k.components.graphicComponents.sounds.SoundController;
+import com.andres_k.components.soundComponents.MusicController;
+import com.andres_k.components.soundComponents.SoundController;
 import com.andres_k.components.taskComponent.EnumTargetTask;
 import com.andres_k.components.taskComponent.GenericSendTask;
 import com.andres_k.utils.configs.Config;
+import com.andres_k.utils.configs.CurrentUser;
 import com.andres_k.utils.configs.GlobalVariable;
 import com.andres_k.utils.configs.WindowConfig;
 import com.andres_k.utils.stockage.Tuple;
@@ -28,8 +30,10 @@ public class MasterGame implements Observer {
     public MasterGame() throws SlickException, JSONException {
         SoundController.init();
         MusicController.init();
-        InputData.init(Config.input);
 
+        InputData.init(Config.input);
+        ScoreData.init(Config.score);
+        CurrentUser.init("player", "player", "ally");
         this.masterTask = new GenericSendTask();
         this.masterTask.addObserver(this);
         this.windows = new Windows("Space Dodger", this.masterTask);
@@ -38,9 +42,7 @@ public class MasterGame implements Observer {
     public void start() {
         try {
             this.startGame();
-        } catch (SlickException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

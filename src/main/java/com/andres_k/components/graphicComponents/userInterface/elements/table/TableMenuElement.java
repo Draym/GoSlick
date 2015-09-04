@@ -3,13 +3,15 @@ package com.andres_k.components.graphicComponents.userInterface.elements.table;
 import com.andres_k.components.graphicComponents.input.EnumInput;
 import com.andres_k.components.graphicComponents.userInterface.overlay.EnumOverlayElement;
 import com.andres_k.components.graphicComponents.userInterface.tools.elements.Element;
-import com.andres_k.components.graphicComponents.userInterface.tools.items.BodyRect;
+import com.andres_k.components.graphicComponents.userInterface.tools.items.ColorRect;
 import com.andres_k.components.graphicComponents.userInterface.tools.listElements.ListElement;
+import com.andres_k.components.taskComponent.EnumTask;
 import com.andres_k.components.taskComponent.GenericSendTask;
 import com.andres_k.utils.stockage.Pair;
 import com.andres_k.utils.tools.ColorTools;
 import com.andres_k.utils.tools.StringTools;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public class TableMenuElement extends TableElement {
     private GenericSendTask genericSendTask;
     private Element focusedElement;
 
-    public TableMenuElement(EnumOverlayElement type, GenericSendTask genericSendTask, BodyRect body) {
+    public TableMenuElement(EnumOverlayElement type, GenericSendTask genericSendTask, ColorRect body) {
         super(type, body, false, new boolean[]{true, true});
         this.genericSendTask = genericSendTask;
         this.focusedElement = null;
@@ -28,18 +30,15 @@ public class TableMenuElement extends TableElement {
 
     // FUNCTION
     @Override
-    public void doTask(Object task) {
+    public void doTask(Object task) throws SlickException {
         if (task instanceof Element) {
             this.addElement((Element) task);
+        } else if (task instanceof EnumTask) {
+            if (task == EnumTask.CLEAR){
+                this.clearData();
+            }
         } else if (task instanceof Pair) {
-            if (((Pair) task).getV1().equals("clear")){
-                String id = (String) ((Pair) task).getV2();
-
-                Element key = this.containsKey(id);
-                if (key != null){
-                    this.table.get(key).clear();
-                }
-            } else {
+            if (((Pair) task).getV1() instanceof Integer && ((Pair) task).getV2() instanceof Boolean) {
                 Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
                 if (received.getV1() < this.reachable.length) {
                     this.reachable[received.getV1()] = received.getV2();
@@ -47,7 +46,7 @@ public class TableMenuElement extends TableElement {
             }
         } else if (task instanceof Integer) {
             int i = 0;
-            for (Map.Entry<String, Pair<BodyRect, BodyRect>> entry : this.positionBody.entrySet()) {
+            for (Map.Entry<String, Pair<ColorRect, ColorRect>> entry : this.positionBody.entrySet()) {
                 if ((Integer) task == i) {
                     entry.getValue().getV1().setColor(ColorTools.get(ColorTools.Colors.TRANSPARENT_YELLOW));
                 } else {
@@ -55,7 +54,7 @@ public class TableMenuElement extends TableElement {
                 }
                 ++i;
             }
-        } else if (task instanceof String){
+        } else if (task instanceof String) {
             String value = this.focusedElement.toString();
             String keyString = (String) task;
             String newValue;
@@ -119,7 +118,7 @@ public class TableMenuElement extends TableElement {
                                 newValue = true;
                             }
                             EnumOverlayElement type = element.getType();
-                            if (element.getId().contains(":")){
+                            if (element.getId().contains(":")) {
                                 type = EnumOverlayElement.getEnumByValue(element.getId().substring(element.getId().indexOf(":") + 1));
                             }
                             this.genericSendTask.sendTask(new Pair<>(type, new Pair<>(listIndex, newValue)));

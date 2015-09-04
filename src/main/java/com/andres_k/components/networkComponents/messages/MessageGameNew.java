@@ -10,26 +10,28 @@ import java.util.List;
  * Created by andres_k on 10/07/2015.
  */
 public class MessageGameNew extends MessageModel {
-    EnumOverlayElement from;
-    List<Object> objects;
+    EnumOverlayElement type;
+    EnumOverlayElement target;
+    List<String> values;
 
-    public MessageGameNew(String pseudo, String id, EnumOverlayElement from){
-        this.pseudo = pseudo;
-        this.id = id;
-        this.from = from;
-        this.objects = new ArrayList<>();
+    public MessageGameNew(String pseudo, String id, EnumOverlayElement type, EnumOverlayElement target){
+        super(pseudo, id);
+
+        this.type = type;
+        this.target = target;
+        this.values = new ArrayList<>();
     }
 
-    public void addObject(Object object){
-        this.objects.add(object);
+    public void addValue(String object){
+        this.values.add(object);
     }
 
     // GETTERS
-    public EnumOverlayElement getFrom(){
-        return this.from;
+    public EnumOverlayElement getType(){
+        return this.type;
     }
 
-    public List<Object> getObjects(){
-        return this.objects;
+    public List<String> getValues(){
+        return this.values;
     }
 }

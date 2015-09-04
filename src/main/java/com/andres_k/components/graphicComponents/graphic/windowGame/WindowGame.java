@@ -6,20 +6,21 @@ import com.andres_k.components.graphicComponents.graphic.EnumWindow;
 import com.andres_k.components.graphicComponents.graphic.WindowBasedGame;
 import com.andres_k.components.graphicComponents.input.EnumInput;
 import com.andres_k.components.graphicComponents.userInterface.overlay.windowOverlay.GameOverlay;
+import com.andres_k.components.soundComponents.EnumSound;
+import com.andres_k.components.soundComponents.MusicController;
 import com.andres_k.components.taskComponent.GenericSendTask;
 import com.andres_k.utils.configs.GlobalVariable;
 import com.andres_k.utils.configs.WindowConfig;
+import com.andres_k.utils.tools.ConsoleWrite;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.*;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
  * Created by andres_k on 08/07/2015.
  */
 public class WindowGame extends WindowBasedGame {
+    private long delta;
 
     public WindowGame(int idWindow, GenericSendTask interfaceTask) throws JSONException {
         this.idWindow = idWindow;
@@ -45,12 +46,21 @@ public class WindowGame extends WindowBasedGame {
         this.container = gameContainer;
         this.stateWindow = stateBasedGame;
 
-        this.animatorOverlay.init();
-
+        ConsoleWrite.debug("\n START INIT");
+        try {
+            this.animatorOverlay.init();
+        } catch (JSONException e) {
+            throw new SlickException(e.getMessage());
+        }
+        ConsoleWrite.debug("END INIT");
         this.controller.setStateWindow(this.stateWindow);
         this.controller.setWindow(this);
 
-        this.controller.init();
+        try {
+            this.controller.init();
+        } catch (JSONException e) {
+            throw new SlickException(e.getMessage());
+        }
         this.overlay.initElementsComponent(this.animatorOverlay);
     }
 
@@ -58,10 +68,12 @@ public class WindowGame extends WindowBasedGame {
     @Override
     public void enter(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
         this.container.setTargetFrameRate(60);
-        this.container.setShowFPS(false);
-        this.container.setAlwaysRender(false);
-        this.container.setVSync(false);
+        this.container.setShowFPS(GlobalVariable.showFps);
+        this.container.setAlwaysRender(true);
+        this.container.setVSync(true);
 
+        this.delta = 0;
+        MusicController.loop(EnumSound.BACKGROUND_GAME);
         this.overlay.enter();
         this.controller.enter();
         GlobalVariable.appGameContainer.setDisplayMode(WindowConfig.getW2SizeX(), WindowConfig.getW2SizeY(), false);
@@ -70,22 +82,26 @@ public class WindowGame extends WindowBasedGame {
 
     @Override
     public void leave(GameContainer gameContainer, StateBasedGame stateBasedGame) throws SlickException {
+        MusicController.stop(EnumSound.BACKGROUND_GAME);
         this.controller.leave();
         this.clean();
     }
 
     @Override
     public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics) throws SlickException {
-        graphics.setColor(Color.gray);
-        graphics.fillRect(0, 0, WindowConfig.w2_sX, WindowConfig.w2_sY);
         this.controller.renderWindow(graphics);
         this.overlay.draw(graphics);
     }
 
     @Override
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
-        this.controller.updateWindow(gameContainer);
-        this.overlay.updateOverlay();
+        this.delta += i;
+
+        if (this.delta > 30) {
+            this.controller.updateWindow(gameContainer);
+            this.overlay.updateOverlay();
+            this.delta = 0;
+        }
     }
 
     @Override

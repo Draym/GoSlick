@@ -94,7 +94,7 @@ public class OverlayConfigs {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            StringTools.writeInFile(this.filePreference, this.configPreference.toString());
+            StringTools.writeInInput(getClass().getClassLoader().getResourceAsStream(this.filePreference), this.configPreference.toString());
             return true;
         }
         return false;

@@ -6,7 +6,15 @@ package com.andres_k.components.gameComponents.gameObject;
 public enum EnumGameObject {
     /* Admin */
     NULL("null"),
-    UNBREAKABLE("unbreakable");
+    UNBREAKABLE("unbreakable"),
+
+    //collisions
+    ATTACK_BODY("attackBody"),
+    DEFENSE_BODY("defenseBody"),
+    BLOCK_BODY("blockBody"),
+
+    //item
+    PLAYER("player");
 
 
     private final String value;

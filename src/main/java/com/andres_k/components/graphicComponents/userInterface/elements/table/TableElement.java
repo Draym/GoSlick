@@ -3,15 +3,16 @@ package com.andres_k.components.graphicComponents.userInterface.elements.table;
 import com.andres_k.components.graphicComponents.userInterface.elements.InterfaceElement;
 import com.andres_k.components.graphicComponents.userInterface.overlay.EnumOverlayElement;
 import com.andres_k.components.graphicComponents.userInterface.tools.elements.Element;
-import com.andres_k.components.graphicComponents.userInterface.tools.items.BodyRect;
+import com.andres_k.components.graphicComponents.userInterface.tools.items.ColorRect;
 import com.andres_k.components.graphicComponents.userInterface.tools.listElements.ButtonListElement;
 import com.andres_k.components.graphicComponents.userInterface.tools.listElements.ImageListElement;
 import com.andres_k.components.graphicComponents.userInterface.tools.listElements.ListElement;
 import com.andres_k.components.graphicComponents.userInterface.tools.listElements.StringListElement;
 import com.andres_k.utils.stockage.Pair;
 import com.andres_k.utils.tools.ColorTools;
-import com.andres_k.utils.tools.Debug;
+import com.andres_k.utils.tools.ConsoleWrite;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import java.util.LinkedHashMap;
@@ -22,14 +23,14 @@ import java.util.Map;
  */
 public class TableElement extends InterfaceElement {
     protected Map<Element, ListElement> table;
-    protected Map<String, Pair<BodyRect, BodyRect>> positionBody;
+    protected Map<String, Pair<ColorRect, ColorRect>> positionBody;
 
-    public TableElement(EnumOverlayElement type, BodyRect body, boolean activated, boolean[] needActivatedParent) {
+    public TableElement(EnumOverlayElement type, ColorRect body, boolean activated, boolean[] needActivatedParent) {
         this.parentInit(body, type, activated, needActivatedParent);
         this.childInit();
     }
 
-    public TableElement(EnumOverlayElement type, BodyRect body) {
+    public TableElement(EnumOverlayElement type, ColorRect body) {
         this.parentInit(body, type, true, new boolean[]{true, true});
         this.childInit();
     }
@@ -62,11 +63,11 @@ public class TableElement extends InterfaceElement {
     }
 
     @Override
-    public void doTask(Object task) {
+    public void doTask(Object task) throws SlickException {
         if (task instanceof Element) {
             this.addElement((Element) task);
         } else if (task instanceof Pair) {
-            Debug.debug("Table received: " + task);
+            ConsoleWrite.debug("Table received: " + task);
             if (((Pair) task).getV1() instanceof Integer) {
                 Pair<Integer, Boolean> received = (Pair<Integer, Boolean>) task;
                 if (received.getV1() < this.reachable.length) {
@@ -76,7 +77,7 @@ public class TableElement extends InterfaceElement {
                 Pair<EnumOverlayElement, Object> received = (Pair<EnumOverlayElement, Object>) task;
                 Element element = this.containsId(received.getV1().getValue());
 
-                Debug.debug("find element: " + element + "\n");
+                ConsoleWrite.debug("find element: " + element + "\n");
                 if (element != null) {
                     element.doTask(received.getV2());
                 }
@@ -128,7 +129,7 @@ public class TableElement extends InterfaceElement {
         return null;
     }
 
-    public void addElement(Element item) {
+    public void addElement(Element item) throws SlickException {
         Element key = this.containsKey(item);
         if (key != null) {
             //           Debug.debug("add elem: '" + item.toString() + "'");
@@ -225,14 +226,14 @@ public class TableElement extends InterfaceElement {
             float widthWithBorder = width - (border * 2);
             widthWithBorder = (widthWithBorder < 0 ? 0 : widthWithBorder);
             if (entry.getKey().getType() == EnumOverlayElement.IMAGE) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
-                        new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height))));
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new ColorRect(new Rectangle(currentX, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
+                        new ColorRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height))));
             } else if (entry.getKey().getType() == EnumOverlayElement.STRING) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
-                        new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new ColorRect(new Rectangle(currentX + border, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
+                        new ColorRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
             } else if (entry.getKey().getType() == EnumOverlayElement.BUTTON) {
-                this.positionBody.put(entry.getKey().getId(), new Pair<>(new BodyRect(new Rectangle(currentX + border, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
-                        new BodyRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
+                this.positionBody.put(entry.getKey().getId(), new Pair<>(new ColorRect(new Rectangle(currentX + border, currentY, widthWithBorder, entry.getKey().getAbsoluteHeight())),
+                        new ColorRect(new Rectangle(currentX + border, currentY + entry.getKey().getAbsoluteHeight(), widthWithBorder, height), ColorTools.get(ColorTools.Colors.TRANSPARENT_GREYBLUE))));
             }
             currentX += width;
         }

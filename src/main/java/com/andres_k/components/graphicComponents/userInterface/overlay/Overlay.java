@@ -7,6 +7,7 @@ import com.andres_k.components.taskComponent.GenericSendTask;
 import com.andres_k.utils.configs.Config;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -35,7 +36,7 @@ public abstract class Overlay extends Observable implements Observer {
 
     // INIT
     public abstract void initElements();
-    public abstract void initElementsComponent(AnimatorOverlayData animatorOverlayData);
+    public abstract void initElementsComponent(AnimatorOverlayData animatorOverlayData) throws SlickException, SlickException;
 
     public void initPreference() {
         for (Map.Entry<EnumOverlayElement, boolean[]> entry : this.overlayConfigs.getAvailablePreference().entrySet()) {
@@ -45,9 +46,10 @@ public abstract class Overlay extends Observable implements Observer {
         }
     }
 
-    // FUNCTIONS
+    public abstract void initElement(EnumOverlayElement element) throws SlickException;
 
-    public abstract void enter();
+    // FUNCTIONS
+    public abstract void enter() throws SlickException;
 
     public void leave() {
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
@@ -76,22 +78,20 @@ public abstract class Overlay extends Observable implements Observer {
         }
     }
 
-    public abstract void doTask(Object task);
+    public abstract void doTask(Object task) throws SlickException;
 
     public abstract boolean event(int key, char c, EnumInput type);
 
     public boolean isOnFocus(int x, int y) {
-        boolean result = false;
-
         for (Map.Entry<EnumOverlayElement, InterfaceElement> entry : this.elements.entrySet()) {
             boolean[] reachable = entry.getValue().getReachable();
             if (reachable[this.current]) {
                 if (entry.getValue().isOnFocus(x, y) != null) {
-                    result = true;
+                    return true;
                 }
             }
         }
-        return result;
+        return false;
     }
 
     public boolean isFocused() {

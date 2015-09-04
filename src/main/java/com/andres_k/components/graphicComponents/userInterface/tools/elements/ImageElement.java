@@ -2,9 +2,14 @@ package com.andres_k.components.graphicComponents.userInterface.tools.elements;
 
 import com.andres_k.components.gameComponents.animations.Animator;
 import com.andres_k.components.graphicComponents.userInterface.overlay.EnumOverlayElement;
-import com.andres_k.components.graphicComponents.userInterface.tools.items.BodyRect;
+import com.andres_k.components.graphicComponents.userInterface.tools.items.ColorRect;
+import com.andres_k.components.taskComponent.EnumTask;
 import com.andres_k.utils.stockage.Pair;
+import com.andres_k.utils.stockage.Tuple;
+import com.andres_k.utils.tools.ConsoleWrite;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
+import org.newdawn.slick.SlickException;
 
 /**
  * Created by andres_k on 27/06/2015.
@@ -13,19 +18,19 @@ public class ImageElement extends Element {
     private Animator animator;
     private float sizeXMAX;
 
-    public ImageElement(BodyRect body, Animator animator, PositionInBody position) {
+    public ImageElement(ColorRect body, Animator animator, PositionInBody position) {
         this.init(body, "", position, EnumOverlayElement.IMAGE);
         this.animator = animator;
         this.sizeXMAX = body.getSizeX();
     }
 
-    public ImageElement(BodyRect body, Animator animator, String id, PositionInBody position) {
+    public ImageElement(ColorRect body, Animator animator, String id, PositionInBody position) {
         this.init(body, id, position, EnumOverlayElement.IMAGE);
         this.animator = animator;
         this.sizeXMAX = body.getSizeX();
     }
 
-    public ImageElement(BodyRect body, String id, PositionInBody position) {
+    public ImageElement(ColorRect body, String id, PositionInBody position) {
         this.init(body, id, position, EnumOverlayElement.IMAGE);
         this.animator = null;
         this.sizeXMAX = body.getSizeX();
@@ -54,7 +59,7 @@ public class ImageElement extends Element {
     }
 
     @Override
-    public void draw(Graphics g, BodyRect body) {
+    public void draw(Graphics g, ColorRect body) {
         if (body.getMinX() != -1) {
             if (this.body != null && body.getColor() == null) {
                 body.setColor(this.body.getColor());
@@ -67,7 +72,7 @@ public class ImageElement extends Element {
         }
     }
 
-    private Pair<Float, Float> getChoicePosition(BodyRect body) {
+    private Pair<Float, Float> getChoicePosition(ColorRect body) {
         float x = body.getMinX();
         float y = body.getMinY();
 
@@ -133,7 +138,7 @@ public class ImageElement extends Element {
     }
 
     @Override
-    public boolean replace(Element element) {
+    public boolean replace(Element element) throws SlickException {
         if (element.getType() == EnumOverlayElement.IMAGE) {
             this.animator = new Animator(((ImageElement) element).animator);
             return true;
@@ -143,26 +148,34 @@ public class ImageElement extends Element {
 
     @Override
     public Object doTask(Object task) {
-        if (task instanceof String) {
-            String value = (String) task;
-            if (value.equals("start")) {
+
+        if (task instanceof EnumTask) {
+            if (task == EnumTask.START) {
                 this.start();
+            } else if (task == EnumTask.STOP) {
+                this.stop();
             }
         } else if (task instanceof Long) {
             this.animator.updateAnimator(false, false);
             this.animator.startTimer((Long) task);
-        } else if (task instanceof Pair) {
-            if (((Pair) task).getV1() instanceof String) {
-                if (((Pair) task).getV1().equals("newCurrentIndex") && ((Pair) task).getV2() instanceof Integer && this.animator != null) {
-                    this.animator.setIndex((Integer) ((Pair) task).getV2());
-                } else if (((Pair) task).getV1().equals("cutBody") && ((Pair) task).getV2() instanceof Float) {
-                    float percent = (Float) ((Pair) task).getV2();
-                    if (percent >= 1){
+
+        } else if (task instanceof Tuple && ((Tuple) task).getV1() instanceof EnumTask) {
+            EnumTask order = (EnumTask) ((Tuple) task).getV1();
+            Object target = ((Tuple) task).getV2();
+            Object value = ((Tuple) task).getV3();
+
+            if (order == EnumTask.SETTER) {
+                if (target.equals("index") && value instanceof Integer && this.animator != null) {
+                    this.animator.setIndex((Integer) value);
+                }
+            } else if (order == EnumTask.CUT) {
+                if (target.equals("body") && value instanceof Float) {
+                    float percent = (float) value;
+                    if (percent >= 1) {
                         this.body.setPrintable(true);
                         this.body.setSizes(this.sizeXMAX, this.body.getSizeY());
-                    }
-                    else if (percent > 0){
-                        if (!this.id.contains(EnumOverlayElement.BORDER.getValue())){
+                    } else if (percent > 0) {
+                        if (!this.id.contains(EnumOverlayElement.BORDER.getValue())) {
                             this.body.setPrintable(true);
                             this.body.setSizes(this.sizeXMAX * percent, this.body.getSizeY());
                         }
@@ -171,7 +184,12 @@ public class ImageElement extends Element {
                         this.body.setSizes(0, this.body.getSizeY());
                     }
                 }
+            } else if (order == EnumTask.EVENT) {
+                if (target instanceof Integer && (int) target <= Input.KEY_NUMPAD9 && (int) target >= Input.KEY_NUMPAD0) {
+                    this.animator.setIndex((Integer) value);
+                }
             }
+
         }
         return null;
     }
@@ -181,7 +199,11 @@ public class ImageElement extends Element {
         return "imageType: " + (this.animator != null ? this.animator.getCurrentAnimation() : "");
     }
 
-    private void start(){
+    private void start() {
+        this.animator.restart();
+    }
+
+    private void stop() {
         this.animator.restart();
     }
 
@@ -215,7 +237,7 @@ public class ImageElement extends Element {
     }
 
     // SETTERS
-    public void setBody(BodyRect body) {
+    public void setBody(ColorRect body) {
         if (this.body != null) {
             if (body.getColor() == null) {
                 body.setColor(this.body.getColor());
