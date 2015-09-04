@@ -25,10 +25,12 @@ public class Obstacle extends GameObject {
 
     @Override
     public void draw(Graphics g) {
-        g.drawAnimation(this.animator.currentAnimation(), this.graphicalX(), this.graphicalY());
-        BodyAnimation bodyAnimation = this.animator.currentBodyAnimation();
-        if (bodyAnimation != null) {
-            bodyAnimation.draw(g, this.animator.currentFrame(), this.getPosX(), this.getPosY());
+        if (this.animator != null) {
+            g.drawAnimation(this.animator.currentAnimation(), this.graphicalX(), this.graphicalY());
+            BodyAnimation bodyAnimation = this.animator.currentBodyAnimation();
+            if (bodyAnimation != null) {
+                bodyAnimation.draw(g, this.animator.currentFrame(), this.getPosX(), this.getPosY());
+            }
         }
     }
 

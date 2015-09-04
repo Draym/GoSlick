@@ -171,6 +171,8 @@ public abstract class GameObject {
     }
 
     public boolean isNeedDelete() {
+        if (this.animator == null)
+            return true;
         return this.animator.isDeleted();
     }
 
