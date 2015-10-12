@@ -1,6 +1,5 @@
 package com.andres_k.components.graphicComponents.background;
 
-import com.andres_k.utils.configs.WindowConfig;
 import com.andres_k.utils.stockage.Pair;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -56,18 +55,11 @@ public class Background {
     public void instanceCurrentBackground() throws SlickException {
         Image background = new Image(this.path.get(this.current));
 
+        this.images.clear();
+        this.images.add(background);
         this.backgroundSizeY = background.getHeight();
-        int number = (int) (WindowConfig.w2_sY / this.backgroundSizeY) + 2;
-
-        int x = 0;
-        int y = (int)(WindowConfig.w2_sY - this.backgroundSizeY);
-
-        y = (y < 0 ? 0 : y);
-        for (int i = 0; i < number; ++i) {
-            this.images.add(background.copy());
-            this.positions.add(new Pair<>(x, y));
-            y -= this.backgroundSizeY;
-        }
+        this.positions.clear();
+        this.positions.add(new Pair<>(0, 0));
     }
 
     // SETTERS
