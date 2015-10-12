@@ -132,10 +132,12 @@ public class GameObjectController extends Observable {
 
     public void changeGameState(boolean running){
         for (GameObject object : this.players){
-            object.getAnimator().currentAnimation().setAutoUpdate(running);
+            if (object.getAnimator() != null)
+                object.getAnimator().currentAnimation().setAutoUpdate(running);
         }
         for (GameObject object : this.obstacles){
-            object.getAnimator().currentAnimation().setAutoUpdate(running);
+            if (object.getAnimator() != null)
+                object.getAnimator().currentAnimation().setAutoUpdate(running);
         }
     }
 

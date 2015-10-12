@@ -15,12 +15,12 @@ import java.util.Map;
  * Created by andres_k on 07/10/2015.
  */
 public class Background {
-    protected boolean   launched;
-    protected String    current;
-    protected float backgroundSizeY;
-    protected List<Image> images;
     protected List<Pair<Integer, Integer>> positions;
     protected Map<String, String> path;
+    protected float backgroundSizeY;
+    protected List<Image> images;
+    protected boolean launched;
+    protected String current;
 
     public Background() {
         this.images = new ArrayList<>();
@@ -71,9 +71,9 @@ public class Background {
     }
 
     // SETTERS
-    public void addBackground(String name, String path) {
-        this.current = name;
-        this.path.put(name, path);
+    public void addBackground(BackgroundEnum background) {
+        this.current = background.getName();
+        this.path.put(background.getName(), background.getPath());
     }
 
     public void changeCurrent(String name){

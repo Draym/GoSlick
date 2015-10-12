@@ -3,6 +3,7 @@ package com.andres_k.components.gameComponents.controllers;
 import com.andres_k.components.gameComponents.animations.AnimatorGameData;
 import com.andres_k.components.gameComponents.gameObject.GameObjectController;
 import com.andres_k.components.graphicComponents.background.Background;
+import com.andres_k.components.graphicComponents.background.BackgroundEnum;
 import com.andres_k.components.graphicComponents.background.BackgroundSliding;
 import com.andres_k.components.graphicComponents.graphic.EnumWindow;
 import com.andres_k.components.graphicComponents.input.EnumInput;
@@ -85,7 +86,7 @@ public class GameController extends WindowController {
         this.gameObjectController.init(this.animatorGameData);
 
         this.background = new BackgroundSliding();
-        this.background.addBackground("basic", "image/background/backgroundGame.png");
+        this.background.addBackground(BackgroundEnum.BASIC);
         this.background.init();
     }
 
