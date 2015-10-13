@@ -184,6 +184,6 @@ public class GameController extends WindowController {
     }
 
     public void createPlayerForGame() throws SlickException {
-        this.gameObjectController.createPlayers(this.playerNames, this.animatorGameData);
+        this.gameObjectController.createPlayers(this.playerNames);
     }
 }
