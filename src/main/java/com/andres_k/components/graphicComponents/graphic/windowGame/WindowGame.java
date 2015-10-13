@@ -13,7 +13,9 @@ import com.andres_k.utils.configs.GlobalVariable;
 import com.andres_k.utils.configs.WindowConfig;
 import com.andres_k.utils.tools.ConsoleWrite;
 import org.codehaus.jettison.json.JSONException;
-import org.newdawn.slick.*;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -97,7 +99,7 @@ public class WindowGame extends WindowBasedGame {
     public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
         this.delta += i;
 
-        if (this.delta > 30) {
+        if (this.delta > GlobalVariable.timeLoop) {
             this.controller.updateWindow(gameContainer);
             this.overlay.updateOverlay();
             this.delta = 0;

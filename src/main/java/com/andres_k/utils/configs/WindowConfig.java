@@ -8,7 +8,7 @@ public class WindowConfig {
     public static float w1_sX = 1280;
     public static float w1_sY = 800;
     public static float w2_sX = 700;
-    public static float w2_sY = 900;
+    public static float w2_sY = 800;
 
 
     public static int getW1SizeX() {
