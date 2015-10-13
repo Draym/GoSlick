@@ -8,6 +8,7 @@ public enum EnumSprites {
     //index
     NOTHING(0),
     ITEM(1),
+    PLAYER(2),
     ROUND(6),
     MENU(7),
 
