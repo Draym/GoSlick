@@ -1,5 +1,6 @@
 package com.andres_k.components.gameComponents.animations;
 
+import com.andres_k.utils.tools.ConsoleWrite;
 import org.codehaus.jettison.json.JSONException;
 import org.newdawn.slick.SlickException;
 
@@ -19,8 +20,8 @@ public class AnimatorGameFactory extends AnimatorFactory {
     public Animator getPlayerAnimator(EnumSprites index) throws SlickException, JSONException {
         Animator animator = new Animator();
 //        if (index == EnumSprites.GOKU) {
-//            animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(new SpriteSheet("image/game/gokuRun.png", 42, 54), true, 0, 2, 0, 1, 400));
-//            animator.addCollision(EnumAnimation.BASIC, StringTools.readInput(getClass().getClassLoader().getResourceAsStream("json/gokuRun.json")));
+//            animator.addAnimation(EnumAnimation.IDLE, this.loadAnimation(new SpriteSheet("image/game/gokuRun.png", 42, 54), true, 0, 2, 0, 1, 400));
+//            animator.addCollision(EnumAnimation.IDLE, StringTools.readInput(getClass().getClassLoader().getResourceAsStream("json/gokuRun.json")));
 //        }
         return animator;
     }
@@ -28,8 +29,8 @@ public class AnimatorGameFactory extends AnimatorFactory {
     public Animator getItemAnimator(EnumSprites index) throws SlickException, JSONException {
         Animator animator = new Animator();
 //        if (index == EnumSprites.GROUND) {
-//            animator.addAnimation(EnumAnimation.BASIC, this.loadAnimation(new SpriteSheet("image/game/gokuRun.png", 42, 54), true, 0, 2, 0, 1, 400));
-//            animator.addCollision(EnumAnimation.BASIC, StringTools.readInput(getClass().getClassLoader().getResourceAsStream("json/ground.json")));
+//            animator.addAnimation(EnumAnimation.IDLE, this.loadAnimation(new SpriteSheet("image/game/gokuRun.png", 42, 54), true, 0, 2, 0, 1, 400));
+//            animator.addCollision(EnumAnimation.IDLE, StringTools.readInput(getClass().getClassLoader().getResourceAsStream("json/ground.json")));
 //       }
         return animator;
     }

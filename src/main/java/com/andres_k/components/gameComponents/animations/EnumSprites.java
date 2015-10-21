@@ -17,10 +17,11 @@ public enum EnumSprites {
     //menuOverlay
     EXIT(MENU.getIndex()), SETTINGS(MENU.getIndex()), CONTROLS(MENU.getIndex()), SCREEN(MENU.getIndex()),
     NEW(MENU.getIndex()), GO(MENU.getIndex()), NEXT(MENU.getIndex()), SAVE(MENU.getIndex()), HIGHSCORE(MENU.getIndex()),
-    TOPSCORE(MENU.getIndex()), ALPHABET(MENU.getIndex());
+    TOPSCORE(MENU.getIndex()), ALPHABET(MENU.getIndex()),
 
     //game
-    //SPACESHIP(ITEM.getIndex());
+    GOKU(PLAYER.getIndex()),
+    GROUND(ITEM.getIndex());
 
     private final int index;
 
