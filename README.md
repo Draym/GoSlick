@@ -1,1 +1,1 @@
-Noob starter for noobs programers
+Noob starter for noobs programers, like me

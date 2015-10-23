@@ -9,7 +9,7 @@ import org.newdawn.slick.SlickException;
 /**
  * Created by andres_k on 10/07/2015.
  */
-public class BackgroundSliding extends Background {
+public class BackgroundSliding extends Background{
 
     private float speed;
 

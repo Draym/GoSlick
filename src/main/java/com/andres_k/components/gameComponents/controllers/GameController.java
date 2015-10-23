@@ -4,7 +4,6 @@ import com.andres_k.components.gameComponents.animations.AnimatorGameData;
 import com.andres_k.components.gameComponents.gameObject.GameObjectController;
 import com.andres_k.components.graphicComponents.background.Background;
 import com.andres_k.components.graphicComponents.background.BackgroundEnum;
-import com.andres_k.components.graphicComponents.background.BackgroundSliding;
 import com.andres_k.components.graphicComponents.graphic.EnumWindow;
 import com.andres_k.components.graphicComponents.input.EnumInput;
 import com.andres_k.components.graphicComponents.input.InputGame;
@@ -80,8 +79,8 @@ public class GameController extends WindowController {
         this.animatorGameData.init();
         this.gameObjectController.init(this.animatorGameData);
 
-        this.background = new BackgroundSliding(50);
-        this.background.addBackground(BackgroundEnum.BASIC);
+        this.background = new Background();
+        this.background.addBackground(BackgroundEnum.ARENA_DAY);
         this.background.init();
     }
 
