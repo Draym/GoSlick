@@ -36,7 +36,7 @@ public class MasterGame implements Observer {
         CurrentUser.init("player", "player", "ally");
         this.masterTask = new GenericSendTask();
         this.masterTask.addObserver(this);
-        this.windows = new Windows("StarterBuild", this.masterTask);
+        this.windows = new Windows("StartBuild", this.masterTask);
     }
 
     public void start() {
