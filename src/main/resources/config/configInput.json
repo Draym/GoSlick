@@ -1,0 +1,6 @@
+{
+  "PORTAL_REPULSE" : "A",
+  "PORTAL_ATTRACT" : "Z",
+  "PAUSE": "P",
+  "CHECKPOINT": "S"
+}
