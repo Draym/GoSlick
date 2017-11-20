@@ -1,11 +1,14 @@
 package com.andres_k.gameToolsLib.components.resourceComponents.resources.factory;
 
-import com.andres_k.gameToolsLib.utils.tools.MathTools;
-import com.andres_k.gameToolsLib.utils.tools.StringTools;
+import com.andres_k.gameToolsLib.utils.tools.*;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.util.BufferedImageUtil;
+
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * Created by andres_k on 09/12/2015.
@@ -25,6 +28,39 @@ public class AnimationFactory {
             animation.addFrame(new Image(id + zero + i + extension), interval);
         }
         animation.setLooping(looping);
+        return animation;
+    }
+
+
+    public static Animation createAnimationFromGIF(String file, boolean looping, boolean pingpong) {
+        Animation animation = new Animation();
+
+        GIFDecoder gifDecoder = new GIFDecoder();
+        gifDecoder.read(AnimationFactory.class.getClassLoader().getResourceAsStream(file));
+        for (int i =0; i < gifDecoder.getFrameCount(); ++i) {
+            try {
+                animation.addFrame(new Image(BufferedImageUtil.getTexture("gif", gifDecoder.getFrame(i))), gifDecoder.getDelay(i));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        animation.setLooping(looping);
+        animation.setPingPong(pingpong);
+        return animation;
+    }
+
+    public static Animation createAnimation(MovieDecoder.Movie movie, boolean looping, boolean pingpong) {
+        Animation animation = new Animation();
+
+        for (BufferedImage image : movie.frames) {
+            try {
+                animation.addFrame(new Image(BufferedImageUtil.getTexture("movie", image)), movie.frameRate);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        animation.setLooping(looping);
+        animation.setPingPong(pingpong);
         return animation;
     }
 
