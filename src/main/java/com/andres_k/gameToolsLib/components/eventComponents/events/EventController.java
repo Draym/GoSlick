@@ -95,6 +95,17 @@ public class EventController {
             return v2;
     }
 
+    public EInput getMoreRecentEventBetween(EInput[] inputs) {
+        for (EInput event : this.eventHistory) {
+            for (EInput input : inputs) {
+                if (event.equals(input)) {
+                    return event;
+                }
+            }
+        }
+        return EInput.NOTHING;
+    }
+
     public EInput getTheLastEvent() {
         if (this.eventHistory.size() > 0) {
             return this.eventHistory.get(0);
