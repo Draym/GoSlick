@@ -5,6 +5,7 @@ import com.andres_k.gameToolsLib.components.gameComponent.collisions.CollisionIt
 import com.andres_k.gameToolsLib.components.gameComponent.collisions.CollisionResult;
 import com.andres_k.gameToolsLib.utils.configs.GameConfig;
 import com.andres_k.gameToolsLib.utils.stockage.Pair;
+import com.andres_k.gameToolsLib.utils.tools.Console;
 import com.andres_k.gameToolsLib.utils.tools.MathTools;
 
 /**
@@ -160,6 +161,7 @@ public abstract class MovementController {
     public abstract boolean isOnEarth();
 
     public float getPushX() {
+        Console.force("pushX: " + this.pushX + " direction: " + this.moveDirection);
         if (this.moveDirection == EDirection.RIGHT || this.moveDirection == EDirection.NONE)
             return this.pushX;
         else if (this.moveDirection == EDirection.LEFT)

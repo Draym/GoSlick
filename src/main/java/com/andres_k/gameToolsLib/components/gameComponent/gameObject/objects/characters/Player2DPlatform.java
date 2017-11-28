@@ -18,15 +18,8 @@ public class Player2DPlatform extends Player2D {
     }
 
     @Override
-    public void update() throws SlickException {
-        super.update();
-        if (this.animatorController.canSwitchCurrent()) {
-            if (this.event.allInactive()) {
-                this.moveDown();
-            } else {
-                this.executeLastDirectionEvent();
-            }
-        }
+    public void executeActionOnNoEvent() throws SlickException {
+        this.moveDown();
     }
 
     //ACTIONS
@@ -97,23 +90,5 @@ public class Player2DPlatform extends Player2D {
         } else {
             this.movement.setMoveDirection(EDirection.NONE);
         }
-    }
-
-    @Override
-    protected boolean executeLastDirectionEvent() throws SlickException {
-        if (this.animatorController.canSwitchCurrent()) {
-            EInput last = this.event.getTheLastEvent();
-
-            if (last != EInput.NOTHING) {
-                if (last == EInput.MOVE_RIGHT) {
-                    return this.moveRight();
-                } else if (last == EInput.MOVE_LEFT) {
-                    return this.moveLeft();
-                } else if (last == EInput.MOVE_UP) {
-                    return this.moveUp();
-                }
-            }
-        }
-        return false;
     }
 }

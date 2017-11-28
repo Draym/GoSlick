@@ -46,10 +46,6 @@ public class ScoreData {
                     dataScore.remove(i);
                     dataScore.add(i - 1, save);
                 }
-                Console.debug("\n");
-                for (Pair<String, String> score : dataScore) {
-                    Console.debug(score.toString());
-                }
                 compare = Integer.valueOf(dataScore.get(i).getV2());
             }
         }

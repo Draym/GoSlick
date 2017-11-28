@@ -1,26 +1,27 @@
 package com.andres_k.gameToolsLib.components.gameComponent.commands.actionComponent;
 
 import com.andres_k.custom.component.gameComponent.animation.EAnimation;
+import com.andres_k.custom.component.taskComponents.ETaskType;
 import com.andres_k.gameToolsLib.components.gameComponent.animations.details.AnimationRepercussionItem;
 import com.andres_k.gameToolsLib.components.gameComponent.gameObject.GameObject;
 import com.andres_k.gameToolsLib.components.gameComponent.movement.EDirection;
 import com.andres_k.gameToolsLib.utils.configs.GameConfig;
+import com.andres_k.gameToolsLib.utils.stockage.Pair;
+import com.andres_k.gameToolsLib.utils.tools.Console;
 import org.newdawn.slick.SlickException;
 
 /**
  * Created by andres_k on 17/11/2015.
  */
-public class BasicActions {
+public class BasicActionsWorld {
 
     // ACTIONS
     public static void idle(GameObject object) {
-        object.getMovement().setUseGravity(true);
         object.getMovement().stopMovement();
     }
 
     public static void explode(GameObject object) {
         if (object.getAnimatorController().getIndex() != 2) {
-            object.getMovement().setUseGravity(false);
             if (object.getLastAttacker() != null) {
                 AnimationRepercussionItem repercussionItem = object.getLastAttacker().getAnimatorController().getCurrentContainer().getRepercussion();
                 if (repercussionItem != null) {
@@ -28,9 +29,6 @@ public class BasicActions {
                 }
             }
         } else {
-            if (!object.getMovement().isUseGravity()) {
-                object.getMovement().setUseGravity(true);
-            }
             object.getMovement().setPushY(0f);
         }
         if (!object.isOnEarth() && object.getAnimatorController().getIndex() == 0) {
@@ -48,7 +46,6 @@ public class BasicActions {
     }
 
     public static void transposition(GameObject object) {
-        object.getMovement().setUseGravity(false);
         object.getMovement().setPushX(0f);
         object.getMovement().setPushY(0f);
         try {
@@ -72,16 +69,8 @@ public class BasicActions {
         }
     }
 
-    public static void receipt(GameObject object) {
-       // object.getMovement().setUseGravity(true);
-        object.getMovement().addPushY(-2.5f);
-        object.getMovement().stopMovement();
-    }
-
     public static void rush(GameObject object) {
-        object.getMovement().addPushY(-0.25f);
         object.getMovement().setPushY(0);
-        object.getMovement().setUseGravity(true);
         object.getMovement().setMoveDirection(object.getAnimatorController().getEyesDirection());
         if (object.getMovement().getMoveDirection() != EDirection.NONE) {
             object.getMovement().setPushX(GameConfig.speedTravel * 3.0f + object.getPosX() * 0.003f);
@@ -90,7 +79,6 @@ public class BasicActions {
 
     // TOUCHED
     public static void touchedSimple(GameObject object) {
-        object.getMovement().setUseGravity(false);
         AnimationRepercussionItem repercussionItem = object.getLastAttacker().getAnimatorController().getCurrentContainer().getRepercussion();
         if (repercussionItem != null) {
             repercussionItem.applyMoveRepercussion(object);
@@ -98,7 +86,6 @@ public class BasicActions {
     }
 
     public static void touchedMedium(GameObject object) {
-        object.getMovement().setUseGravity(false);
         AnimationRepercussionItem repercussionItem = object.getLastAttacker().getAnimatorController().getCurrentContainer().getRepercussion();
         if (repercussionItem != null) {
             repercussionItem.applyMoveRepercussion(object);
@@ -106,7 +93,6 @@ public class BasicActions {
     }
 
     public static void touchedPropels(GameObject object) {
-        object.getMovement().setUseGravity(false);
         AnimationRepercussionItem repercussionItem = object.getLastAttacker().getAnimatorController().getCurrentContainer().getRepercussion();
         if (repercussionItem != null) {
             repercussionItem.applyMoveRepercussion(object);
@@ -114,7 +100,6 @@ public class BasicActions {
     }
 
     public static void touchedFlip(GameObject object) {
-        object.getMovement().setUseGravity(false);
         object.getMovement().setPushY(0f);
         AnimationRepercussionItem repercussionItem = object.getLastAttacker().getAnimatorController().getCurrentContainer().getRepercussion();
         if (repercussionItem != null) {
@@ -123,62 +108,19 @@ public class BasicActions {
     }
 
     public static void touchedProjected(GameObject object) {
-        object.getMovement().setUseGravity(false);
         AnimationRepercussionItem repercussionItem = object.getLastAttacker().getAnimatorController().getCurrentContainer().getRepercussion();
         if (repercussionItem != null) {
             repercussionItem.applyMoveRepercussion(object);
         }
     }
 
-    public static void touchedFall(GameObject object) {
-        if (object.isOnEarth()) {
-            object.getAnimatorController().toNextAnimation();
-        }
-    }
-
-    public static void touchedReceipt(GameObject object) {
-        object.getMovement().setUseGravity(false);
-        object.getMovement().setPushX(0);
-        object.getMovement().setPushY(0);
-    }
-
     // MOVEMENT
-    public static void fall(GameObject object) {
-        object.getMovement().setPushY(0f);
-
-        if (object.getMovement().getMoveDirection() != EDirection.NONE) {
-            object.getMovement().setPushX(/*GameConfig.speedTravel * */object.getMovement().getCoeffX());
-        }
-        if (!object.isOnEarth()) {
-            if (object.getMovement().getGravity() > 8) {
-                object.getAnimatorController().getCurrentContainer().getConfig().setNextIndex(1);
-            }
-        }
-        if (object.isOnEarth()) {
-            object.getAnimatorController().toNextAnimation();
-        }
-    }
-
     public static void run(GameObject object) {
-        object.getMovement().setPushY(0);
+        float angle = (float)object.doTask(new Pair<>(ETaskType.GETTER, "currentRotate"));
+        Console.force("angle: " + angle);
+        object.getMovement().setPushX((float)Math.cos(angle * Math.PI / 180));
+        object.getMovement().setPushY((float)Math.sin(angle * Math.PI / 180));
         object.getMovement().setCoeffX(1f);
         object.getMovement().setCoeffY(1f);
-        object.getAnimatorController().setEyesDirection(EDirection.RIGHT);
-        //object.getMovement().setUseGravity(true);
-        if (object.isOnEarth()) {
-            object.getMovement().addPushY(-2.5f);
-        } else {
-            object.getMovement().addPushY(-0.20f);
-        }
-        if (object.getMovement().getMoveDirection() != EDirection.NONE) {
-            object.getMovement().setPushX(GameConfig.speedTravel);
-        }
-    }
-
-    public static void jump(GameObject object) {
-        if (object.getMovement().getMoveDirection() != EDirection.NONE) {
-            object.getMovement().setPushX(/*GameConfig.speedTravel * */ object.getMovement().getCoeffX());
-        }
-        object.getMovement().setPushY(/*-GameConfig.speedJump * */object.getMovement().getCoeffY());
     }
 }

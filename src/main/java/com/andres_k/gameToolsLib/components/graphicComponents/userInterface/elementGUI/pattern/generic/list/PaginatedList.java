@@ -218,14 +218,16 @@ public class PaginatedList extends GuiElement {
     }
 
     public void createList(TextElement text, float marginX, float marginY) throws SlickException {
-        this.tabs.add(new ElementWithTitle(text.getValue(), text, new ImageElement(new ColorRect(new Rectangle(this.getNextTabPosX(), this.getNextTabPosY(), 0, 0)), ResourceManager.get().getGuiAnimator(this.tabImage), true), true));
-        if (this.scrollable) {
-            this.lists.put(text.getValue(), new ScrollableList(this.bodyList, marginX, marginY, true));
-        } else {
-            this.lists.put(text.getValue(), new ListElement(this.bodyList, marginX, marginY, true));
-        }
-        if (this.lists.size() == 1) {
-            this.switchCurrent(text.getValue());
+        if (this.getTab(text.getValue()) == null) {
+            this.tabs.add(new ElementWithTitle(text.getValue(), text, new ImageElement(new ColorRect(new Rectangle(this.getNextTabPosX(), this.getNextTabPosY(), 0, 0)), ResourceManager.get().getGuiAnimator(this.tabImage), true), true));
+            if (this.scrollable) {
+                this.lists.put(text.getValue(), new ScrollableList(this.bodyList, marginX, marginY, true));
+            } else {
+                this.lists.put(text.getValue(), new ListElement(this.bodyList, marginX, marginY, true));
+            }
+            if (this.lists.size() == 1) {
+                this.switchCurrent(text.getValue());
+            }
         }
     }
 

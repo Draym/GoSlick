@@ -68,6 +68,10 @@ public class MathTools {
         return (value > 0.00f ? value : value * -1);
     }
 
+    public static boolean isInRange(float middle, float target, float range) {
+        return (target >= middle - 5 && target <= middle + 5);
+    }
+
     public static boolean isUpper(double[] d1, double[] d2, double[] p1) {
         return !(((d2[0] - d1[0]) * (p1[1] - d1[1]) - (d2[1] - d1[1]) * (p1[0] - d1[0])) > 0);
     }

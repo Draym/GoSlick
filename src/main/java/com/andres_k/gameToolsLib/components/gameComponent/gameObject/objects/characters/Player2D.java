@@ -59,29 +59,61 @@ public abstract class Player2D extends Character {
     @Override
     public void update() throws SlickException {
         super.update();
-        this.comboController.update();
+        if (this.comboController != null)
+            this.comboController.update();
         this.animatorController.update();
         this.executeLastActionEvent();
         this.animatorController.updateAnimation(this);
         this.movement.update();
+        if (this.animatorController.canSwitchCurrent()) {
+            if (this.event.allInactive()) {
+                this.executeActionOnNoEvent();
+            } else {
+                this.executeLastDirectionEvent();
+            }
+        }
+
     }
+
+    protected abstract void executeActionOnNoEvent() throws SlickException;
 
     @Override
     public void resetActions() {
-        this.comboController.reset();
+        if (this.comboController != null)
+            this.comboController.reset();
         this.event.reset();
     }
 
     // ACTIONS
 
     protected abstract boolean moveRight() throws SlickException;
+
     protected abstract boolean moveLeft() throws SlickException;
+
     protected abstract boolean moveUp() throws SlickException;
+
     protected abstract boolean moveDown() throws SlickException;
 
     protected abstract void changeDirection();
 
-    protected abstract boolean executeLastDirectionEvent() throws SlickException;
+    protected boolean executeLastDirectionEvent() throws SlickException {
+        if (this.animatorController.canSwitchCurrent()) {
+            EInput last = this.event.getTheLastEvent();
+
+            if (last != EInput.NOTHING) {
+                if (last == EInput.MOVE_RIGHT) {
+                    return this.moveRight();
+                } else if (last == EInput.MOVE_LEFT) {
+                    return this.moveLeft();
+                } else if (last == EInput.MOVE_UP) {
+                    return this.moveUp();
+                } else if (last == EInput.MOVE_DOWN) {
+                    return this.moveDown();
+                }
+            }
+        }
+        return false;
+    }
 
     private boolean executeLastActionEvent() {
         EInput last = this.event.consumeStackEvent();
