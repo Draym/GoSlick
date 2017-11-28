@@ -55,6 +55,16 @@ public class MathTools {
         point.setV2(newPoint[1]);
     }
 
+    public static float getShortestAngle(float ang1, float ang2) {
+        float result = ang2 - ang1;
+        if (result > 180) {
+            result = ang2 - (ang1 + 360);
+        } else if (result <= -180) {
+            result = (ang2 + 360) - ang1;
+        }
+        return result;
+    }
+
     public static float getAbsDistance(float p1, float p2) {
         float distance = p1 - p2;
         return abs(distance);

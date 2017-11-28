@@ -23,6 +23,11 @@ public class Pair<T1, T2> extends Object {
         this.v2 = values.getV2();
     }
 
+    public void copy(T1 v1, T2 v2) {
+        this.v1 = v1;
+        this.v2 = v2;
+    }
+
     public T1 getV1() {
         return this.v1;
     }
@@ -38,6 +43,7 @@ public class Pair<T1, T2> extends Object {
     public void setV2(T2 value) {
         this.v2 = value;
     }
+
 
     @Override
     public String toString(){

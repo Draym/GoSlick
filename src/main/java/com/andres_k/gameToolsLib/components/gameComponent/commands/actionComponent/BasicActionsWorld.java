@@ -31,13 +31,6 @@ public class BasicActionsWorld {
         } else {
             object.getMovement().setPushY(0f);
         }
-        if (!object.isOnEarth() && object.getAnimatorController().getIndex() == 0) {
-            object.getAnimatorController().forceCurrentAnimationIndex(1);
-        }
-        if (object.isOnEarth() && object.getAnimatorController().getIndex() != 0) {
-            object.getAnimatorController().forceCurrentAnimationIndex(0);
-            object.getMovement().stopMovement();
-        }
     }
 
     public static void defense(GameObject object) {
@@ -117,7 +110,6 @@ public class BasicActionsWorld {
     // MOVEMENT
     public static void run(GameObject object) {
         float angle = (float)object.doTask(new Pair<>(ETaskType.GETTER, "currentRotate"));
-        Console.force("angle: " + angle);
         object.getMovement().setPushX((float)Math.cos(angle * Math.PI / 180));
         object.getMovement().setPushY((float)Math.sin(angle * Math.PI / 180));
         object.getMovement().setCoeffX(1f);
