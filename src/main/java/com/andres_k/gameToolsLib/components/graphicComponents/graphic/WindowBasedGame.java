@@ -27,8 +27,6 @@ public abstract class WindowBasedGame extends BasicGameState {
     protected WindowController controller;
     protected UserInterface gui;
 
-    protected long delta;
-
     protected WindowBasedGame(int idWindow, WindowController controller, UserInterface gui) {
         this.idWindow = idWindow;
         this.needContentsInit = true;
@@ -61,7 +59,6 @@ public abstract class WindowBasedGame extends BasicGameState {
     protected void initBeforeEnter() throws SlickException {
         this.initContents();
 
-        this.delta = 0;
         this.gui.enter();
         this.controller.enter();
 
@@ -97,16 +94,11 @@ public abstract class WindowBasedGame extends BasicGameState {
     }
 
     @Override
-    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int i) throws SlickException {
-        this.delta += i;
-
-        if (this.delta > GameConfig.timeLoop) {
-            GameConfig.currentTimeLoop = this.delta;
-            this.controller.update(gameContainer);
-            this.gui.update();
-            this.delta = 0;
-            this.myMouseMoved(gameContainer);
-        }
+    public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int delta) throws SlickException {
+        GameConfig.currentTimeLoop = delta;
+        this.controller.update(gameContainer);
+        this.gui.update();
+        this.myMouseMoved(gameContainer);
     }
 
     @Override
