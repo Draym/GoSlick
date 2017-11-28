@@ -1,11 +1,12 @@
 package com.andres_k.gameToolsLib.components.gameComponent.collisions;
 
+import com.andres_k.custom.component.gameComponent.gameObject.EGameObject;
 import com.andres_k.gameToolsLib.components.gameComponent.animations.AnimatorController;
 import com.andres_k.gameToolsLib.components.gameComponent.bodies.BodyRect;
 import com.andres_k.gameToolsLib.components.gameComponent.bodies.BodySprite;
-import com.andres_k.custom.component.gameComponent.gameObject.EGameObject;
 import com.andres_k.gameToolsLib.components.gameComponent.gameObject.GameObject;
 import com.andres_k.gameToolsLib.components.gameComponent.movement.EDirection;
+import com.andres_k.gameToolsLib.components.gameComponent.movement.MovementController;
 import com.andres_k.gameToolsLib.utils.stockage.Pair;
 import com.andres_k.gameToolsLib.utils.tools.MathTools;
 import org.newdawn.slick.geom.Shape;
@@ -22,8 +23,8 @@ import java.util.stream.Collectors;
 public abstract class PhysicalObject extends GameObject {
     private Map<UUID, UUID> saveCollisions;
 
-    protected PhysicalObject(AnimatorController animatorController, EGameObject type, String id, float x, float y, float life, float damage, float moveSpeed, float gravitySpeed, float weight) {
-        super(animatorController, type, id, new Pair<>(x, y), life, damage, moveSpeed, gravitySpeed, weight);
+    protected PhysicalObject(AnimatorController animatorController, MovementController movementController, EGameObject type, String id, float life, float damage) {
+        super(animatorController, movementController, type, id, life, damage);
         this.saveCollisions = new HashMap<>();
     }
 

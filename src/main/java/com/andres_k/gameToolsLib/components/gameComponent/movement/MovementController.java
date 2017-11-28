@@ -1,8 +1,8 @@
 package com.andres_k.gameToolsLib.components.gameComponent.movement;
 
+import com.andres_k.custom.component.gameComponent.gameObject.EGameObject;
 import com.andres_k.gameToolsLib.components.gameComponent.collisions.CollisionItem;
 import com.andres_k.gameToolsLib.components.gameComponent.collisions.CollisionResult;
-import com.andres_k.custom.component.gameComponent.gameObject.EGameObject;
 import com.andres_k.gameToolsLib.utils.configs.GameConfig;
 import com.andres_k.gameToolsLib.utils.stockage.Pair;
 import com.andres_k.gameToolsLib.utils.tools.MathTools;
@@ -10,71 +10,48 @@ import com.andres_k.gameToolsLib.utils.tools.MathTools;
 /**
  * Created by andres_k on 20/10/2015.
  */
-public class MovementController {
+public abstract class MovementController {
     private Pair<Float, Float> positions;
 
     private EDirection moveDirection;
 
-    private float gravity;
-    private boolean onEarth;
-    private boolean useGravity;
-
     private float moveSpeed;
-    private float gravitySpeed;
     private float weight;
     private float pushX;
     private float pushY;
-    private float pushGravity;
-    private float exponential;
+
 
     private float coeffX;
     private float coeffY;
 
-    public MovementController(Pair<Float, Float> positions, float gravity, float moveSpeed, float gravitySpeed, float weight, boolean onEarth) {
-        this.positions = new Pair<>(positions.getV1(), positions.getV2());
-        this.onEarth = onEarth;
-        this.gravity = gravity;
+    protected MovementController(float x, float y, float moveSpeed, float weight) {
+        this.positions = new Pair<>(x, y);
         this.moveSpeed = moveSpeed;
-        this.gravitySpeed = gravitySpeed;
         this.weight = weight;
         this.pushX = 0;
         this.pushY = 0;
         this.coeffX = 1;
         this.coeffY = 1;
-        this.useGravity = true;
         this.moveDirection = EDirection.NONE;
         this.resetGravity();
     }
 
     public MovementController(MovementController movement) {
         this.positions = new Pair<>(movement.positions.getV1(), movement.positions.getV2());
-        this.onEarth = movement.onEarth;
-        this.gravity = movement.gravity;
         this.moveSpeed = movement.moveSpeed;
-        this.gravitySpeed = movement.gravitySpeed;
         this.weight = movement.weight;
         this.pushX = movement.pushX;
         this.pushY = movement.pushY;
-        this.pushGravity = movement.pushGravity;
-        this.useGravity = movement.useGravity;
-        this.exponential = movement.exponential;
         this.moveDirection = movement.moveDirection;
     }
 
     // FUNCTIONS
 
     public void update() {
-        if (!this.onEarth && this.useGravity) {
-            this.pushGravity += this.calculateGravity();
-            if (this.exponential < 1) {
-                this.exponential = this.exponential + this.exponential / 2;
-                this.exponential = (this.exponential > 0.5f ? 0.5f : this.exponential);
-            }
-        }
     }
 
     public void addPushX(float value) {
-        if (this.moveDirection == EDirection.RIGHT)
+        if (this.moveDirection == EDirection.RIGHT || this.moveDirection == EDirection.NONE)
             this.positions.setV1(this.positions.getV1() + value);
         else if (this.moveDirection == EDirection.LEFT)
             this.positions.setV1(this.positions.getV1() - value);
@@ -92,8 +69,6 @@ public class MovementController {
     }
 
     public void resetGravity() {
-        this.pushGravity = 0;
-        this.exponential = 0.3f;
     }
 
     public Pair<Float, Float> predictNextPosition() {
@@ -131,7 +106,7 @@ public class MovementController {
                 if (item.getCollisionDirection() == EDirection.UP) {
                     if (item.getCollisionDistance() > 0)
                         this.positions.setV2(this.getY() + item.getCollisionDistance());
-                    this.onEarth = true;
+                    this.setOnEarth(true);
                 } else if (item.getCollisionDirection() == EDirection.DOWN) {
                     this.positions.setV2(this.getY() + MathTools.abs(item.getCollisionDistance()));
                 }
@@ -150,12 +125,7 @@ public class MovementController {
         return this.moveSpeed * (msec / 1000);
     }
 
-    public float calculateGravity() {
-        if (this.gravitySpeed == 0) {
-            return 0;
-        }
-        return (((this.weight * this.gravity)) / this.gravitySpeed) * this.exponential;
-    }
+    public abstract float calculateGravity();
 
     public float calculatePushX() {
         return this.calculateDistance(GameConfig.currentTimeLoop) * this.getPushX();
@@ -187,12 +157,10 @@ public class MovementController {
         return this.positions;
     }
 
-    public boolean isOnEarth() {
-        return this.onEarth;
-    }
+    public abstract boolean isOnEarth();
 
     public float getPushX() {
-        if (this.moveDirection == EDirection.RIGHT)
+        if (this.moveDirection == EDirection.RIGHT || this.moveDirection == EDirection.NONE)
             return this.pushX;
         else if (this.moveDirection == EDirection.LEFT)
             return -this.pushX;
@@ -211,28 +179,17 @@ public class MovementController {
         return this.getY() + this.calculatePushY() + this.getPushGravity();
     }
 
-    private float getPushGravity() {
-        if (this.useGravity)
-            return this.pushGravity;
-        else
-            return 0f;
-    }
+    protected abstract float getPushGravity();
 
-    public boolean isUseGravity() {
-        return this.useGravity;
-    }
+    public abstract boolean isUseGravity();
 
-    public float getGravity() {
-        return this.pushGravity / this.calculateGravity();
-    }
+    public abstract float getGravity();
 
     public float getMoveSpeed() {
         return this.moveSpeed;
     }
 
-    public float getGravitySpeed() {
-        return this.gravitySpeed;
-    }
+    public abstract float getGravitySpeed();
 
     public float getWeight() {
         return this.weight;
@@ -260,19 +217,11 @@ public class MovementController {
         this.coeffY = value;
     }
 
-    public void setOnEarth(boolean value) {
-        this.onEarth = value;
-        this.useGravity = !value;
-    }
+    public abstract void setOnEarth(boolean value);
 
-    public void setUseGravity(boolean value) {
-        this.useGravity = value;
-        this.resetGravity();
-    }
+    public abstract void setUseGravity(boolean value);
 
-    public void setGravitySpeed(float value) {
-        this.gravitySpeed = value;
-    }
+    public abstract void setGravitySpeed(float value);
 
     public void setMoveSpeed(float value) {
         this.moveSpeed = value;

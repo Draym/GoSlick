@@ -1,10 +1,10 @@
 package com.andres_k.gameToolsLib.components.gameComponent.gameObject;
 
+import com.andres_k.custom.component.eventComponents.EInput;
+import com.andres_k.custom.component.gameComponent.animation.EAnimation;
 import com.andres_k.custom.component.gameComponent.gameObject.EGameObject;
 import com.andres_k.gameToolsLib.components.camera.CameraController;
-import com.andres_k.custom.component.eventComponents.EInput;
 import com.andres_k.gameToolsLib.components.gameComponent.animations.AnimatorController;
-import com.andres_k.custom.component.gameComponent.animation.EAnimation;
 import com.andres_k.gameToolsLib.components.gameComponent.animations.details.AnimationRepercussionItem;
 import com.andres_k.gameToolsLib.components.gameComponent.bodies.BodySprite;
 import com.andres_k.gameToolsLib.components.gameComponent.collisions.CollisionResult;
@@ -22,10 +22,10 @@ import java.util.List;
  * Created by andres_k on 10/07/2015.
  */
 public abstract class GameObject {
-    private GameObject attackerOwner;
+    protected GameObject attackerOwner;
     private GameObject lastAttacker;
     private long resetAttackerTimer;
-    private boolean useAttackerTimer;
+    protected boolean useAttackerTimer;
 
     protected AnimatorController animatorController;
     protected MovementController movement;
@@ -39,8 +39,9 @@ public abstract class GameObject {
     protected float damage;
     protected boolean visibleInScreen;
 
-    protected GameObject(AnimatorController animatorController, EGameObject type, String id, Pair<Float, Float> pos, float life, float damage, float moveSpeed, float gravitySpeed, float weight) {
-        this.movement = new MovementController(pos, 9.8f, moveSpeed, gravitySpeed, weight, false);
+    protected GameObject(AnimatorController animatorController, MovementController movement, EGameObject type, String id, float life, float damage) {
+
+        this.movement = movement;
 
         this.alive = true;
         this.type = type;

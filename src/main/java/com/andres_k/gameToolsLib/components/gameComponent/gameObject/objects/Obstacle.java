@@ -1,11 +1,12 @@
 package com.andres_k.gameToolsLib.components.gameComponent.gameObject.objects;
 
 import com.andres_k.custom.component.eventComponents.EInput;
-import com.andres_k.gameToolsLib.components.gameComponent.animations.AnimatorController;
 import com.andres_k.custom.component.gameComponent.animation.EAnimation;
-import com.andres_k.gameToolsLib.components.gameComponent.collisions.PhysicalObject;
 import com.andres_k.custom.component.gameComponent.gameObject.EGameObject;
+import com.andres_k.gameToolsLib.components.gameComponent.animations.AnimatorController;
+import com.andres_k.gameToolsLib.components.gameComponent.collisions.PhysicalObject;
 import com.andres_k.gameToolsLib.components.gameComponent.gameObject.GameObject;
+import com.andres_k.gameToolsLib.components.gameComponent.movement.MovementController2DWorld;
 import org.newdawn.slick.SlickException;
 
 /**
@@ -14,7 +15,7 @@ import org.newdawn.slick.SlickException;
 public class Obstacle extends PhysicalObject {
 
     public Obstacle(AnimatorController animatorController, EGameObject type, String id, float posX, float posY, float life, float damage, float speed, float weight) {
-        super(animatorController, type, id, posX, posY, life, damage, speed, speed, weight);
+        super(animatorController, new MovementController2DWorld(posX, posY, speed, weight), type, id, life, damage);
     }
 
     @Override

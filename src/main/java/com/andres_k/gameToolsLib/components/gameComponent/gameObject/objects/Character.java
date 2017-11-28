@@ -1,11 +1,10 @@
 package com.andres_k.gameToolsLib.components.gameComponent.gameObject.objects;
 
 import com.andres_k.custom.component.eventComponents.EInput;
+import com.andres_k.custom.component.gameComponent.gameObject.EGameObject;
 import com.andres_k.gameToolsLib.components.gameComponent.animations.AnimatorController;
 import com.andres_k.gameToolsLib.components.gameComponent.collisions.PhysicalObject;
-import com.andres_k.custom.component.gameComponent.gameObject.EGameObject;
-import com.andres_k.gameToolsLib.components.gameComponent.movement.EDirection;
-import com.andres_k.gameToolsLib.utils.configs.GameConfig;
+import com.andres_k.gameToolsLib.components.gameComponent.movement.MovementController;
 import org.newdawn.slick.SlickException;
 
 /**
@@ -13,8 +12,8 @@ import org.newdawn.slick.SlickException;
  */
 public class Character extends PhysicalObject {
 
-    protected Character(AnimatorController animatorController, EGameObject type, String id, float x, float y, float life, float damage, float moveSpeed, float gravitySpeed, float weight) {
-        super(animatorController, type, id, x, y, life, damage, moveSpeed, gravitySpeed, weight);
+    protected Character(AnimatorController animatorController, MovementController movementController, EGameObject type, String id, float life, float damage) {
+        super(animatorController, movementController, type, id,life, damage);
     }
 
     @Override

@@ -12,7 +12,7 @@ import com.andres_k.gameToolsLib.components.gameComponent.animations.details.Ani
 import com.andres_k.gameToolsLib.components.gameComponent.commands.comboComponent.ComboController;
 import com.andres_k.gameToolsLib.components.gameComponent.gameObject.GameObject;
 import com.andres_k.gameToolsLib.components.gameComponent.gameObject.objects.Character;
-import com.andres_k.gameToolsLib.components.gameComponent.movement.EDirection;
+import com.andres_k.gameToolsLib.components.gameComponent.movement.MovementController;
 import com.andres_k.gameToolsLib.components.networkComponents.networkGame.NetworkController;
 import com.andres_k.gameToolsLib.components.networkComponents.networkSend.messageServer.MessageStatePlayer;
 import com.andres_k.gameToolsLib.components.taskComponent.CentralTaskManager;
@@ -29,34 +29,18 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by andres_k on 10/07/2015.
- */
-public class Player extends Character {
+public abstract class Player2D extends Character {
     protected Map<String, Method> specialActions;
     protected Map<EAnimation, Method> checkBeforeLaunch;
     protected EventController event;
     protected ComboController comboController;
     protected int team;
 
-    public Player(AnimatorController animatorController, EGameObject type, String id, int team, float x, float y, float life, float damage, float moveSpeed, float gravitySpeed, float weight) {
-        super(animatorController, type, id, x, y, life, damage, moveSpeed, gravitySpeed, weight);
+    protected Player2D(AnimatorController animatorController, MovementController movementController, EGameObject type, String id, int team, float life, float damage) {
+        super(animatorController, movementController, type, id, life, damage);
 
         this.event = new EventController();
         this.team = team;
-
-        // ADD in child
-        /*
-        this.event.addEvent(EInput.MOVE_UP);
-        this.event.addEvent(EInput.MOVE_DOWN);
-        this.event.addEvent(EInput.MOVE_LEFT);
-        this.event.addEvent(EInput.MOVE_RIGHT);
-        this.event.addEvent(EInput.ATTACK_A);
-        this.event.addEvent(EInput.ATTACK_B);
-        this.event.addEvent(EInput.ATTACK_C);
-        this.event.addEvent(EInput.ATTACK_D);
-        this.event.addEvent(EInput.ATTACK_SPE);*/
-
         this.specialActions = new HashMap<>();
         this.checkBeforeLaunch = new HashMap<>();
         try {
@@ -80,13 +64,6 @@ public class Player extends Character {
         this.executeLastActionEvent();
         this.animatorController.updateAnimation(this);
         this.movement.update();
-        if (this.animatorController.canSwitchCurrent()) {
-            if (this.event.allInactive()) {
-                this.moveFall();
-            } else {
-                this.executeLastDirectionEvent();
-            }
-        }
     }
 
     @Override
@@ -97,85 +74,14 @@ public class Player extends Character {
 
     // ACTIONS
 
-    private boolean moveFall() throws SlickException {
-        if (!this.isOnEarth()
-                && this.animatorController.currentAnimationType() != EAnimation.FALL
-                && this.animatorController.currentAnimationType() != EAnimation.RECEIPT
-                && this.animatorController.currentAnimationType() != EAnimation.TOUCHED_FALL
-                && this.animatorController.currentAnimationType() != EAnimation.TOUCHED_RECEIPT
-                && this.animatorController.canSwitchCurrent()) {
-            this.animatorController.changeAnimation(EAnimation.FALL);
-            this.movement.resetGravity();
-            return true;
-        }
-        return false;
-    }
+    protected abstract boolean moveRight() throws SlickException;
+    protected abstract boolean moveLeft() throws SlickException;
+    protected abstract boolean moveUp() throws SlickException;
+    protected abstract boolean moveDown() throws SlickException;
 
-    private boolean moveRight() throws SlickException {
-        if (this.movement.getMoveDirection() != EDirection.RIGHT || this.animatorController.currentAnimationType() != EAnimation.RUN) {
-            this.animatorController.setEyesDirection(EDirection.RIGHT);
-            this.animatorController.changeAnimation(EAnimation.RUN);
-            this.movement.setMoveDirection(EDirection.RIGHT);
-            this.event.addStackEvent(EInput.MOVE_RIGHT);
-            if (this.event.isActivated(EInput.MOVE_UP))
-                this.moveUp();
-            return true;
-        }
-        return false;
-    }
+    protected abstract void changeDirection();
 
-    private boolean moveLeft() throws SlickException {
-        if (this.movement.getMoveDirection() != EDirection.LEFT || this.animatorController.currentAnimationType() != EAnimation.RUN) {
-            this.animatorController.setEyesDirection(EDirection.LEFT);
-            this.animatorController.changeAnimation(EAnimation.RUN);
-            this.movement.setMoveDirection(EDirection.LEFT);
-            this.event.addStackEvent(EInput.MOVE_LEFT);
-            if (this.event.isActivated(EInput.MOVE_UP)) {
-                this.moveUp();
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private boolean moveUp() throws SlickException {
-        this.changeDirection();
-        this.animatorController.changeAnimation(EAnimation.JUMP);
-        if (!this.isOnEarth())
-            this.animatorController.forceCurrentAnimationIndex(1);
-        this.setOnEarth(false);
-        this.movement.resetGravity();
-        this.event.addStackEvent(EInput.MOVE_UP);
-        return true;
-    }
-
-    private void changeDirection() {
-        EInput recentMove = this.event.getMoreRecentEventBetween(EInput.MOVE_RIGHT, EInput.MOVE_LEFT);
-        if (recentMove == EInput.MOVE_RIGHT) {
-            this.movement.setMoveDirection(EDirection.RIGHT);
-        } else if (recentMove == EInput.MOVE_LEFT) {
-            this.movement.setMoveDirection(EDirection.LEFT);
-        } else {
-            this.movement.setMoveDirection(EDirection.NONE);
-        }
-    }
-
-    private boolean executeLastDirectionEvent() throws SlickException {
-        if (this.animatorController.canSwitchCurrent()) {
-            EInput last = this.event.getTheLastEvent();
-
-            if (last != EInput.NOTHING) {
-                if (last == EInput.MOVE_RIGHT) {
-                    return this.moveRight();
-                } else if (last == EInput.MOVE_LEFT) {
-                    return this.moveLeft();
-                } else if (last == EInput.MOVE_UP) {
-                    return this.moveUp();
-                }
-            }
-        }
-        return false;
-    }
+    protected abstract boolean executeLastDirectionEvent() throws SlickException;
 
     private boolean executeLastActionEvent() {
         EInput last = this.event.consumeStackEvent();
@@ -249,8 +155,6 @@ public class Player extends Character {
                 if (this.animatorController != null) {
                     this.animatorController.forceNextFrame();
                 }
-            } else if (received.getV1() == ETaskType.TRANSFORM && received.getV2() instanceof EGameObject) {
-                this.tryToTransformTo((EGameObject) received.getV2());
             }
         }
         return null;
@@ -280,16 +184,6 @@ public class Player extends Character {
             return true;
         }
         return false;
-    }
-
-    protected void tryToTransformTo(EGameObject requiredType) {
-        if (this.specialActions.containsKey(requiredType.getValue())) {
-            try {
-                this.specialActions.get(requiredType.getValue()).invoke(this);
-            } catch (IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     // GETTERS
@@ -322,7 +216,7 @@ public class Player extends Character {
     public boolean setCurrentLife(float value) {
         if (super.setCurrentLife(value)) {
             NetworkController.get().sendMessage(this.id, new MessageStatePlayer(this));
-            CentralTaskManager.get().sendRequest(TaskFactory.createTask(ELocation.UNKNOWN, (this.team == 1? ELocation.GAME_GUI_State_AlliedPlayers : ELocation.GAME_GUI_State_EnemyPlayers), new Tuple<>(ETaskType.RELAY, this.getId() + GlobalVariable.id_delimiter + EGuiElement.STATE_PLAYER, new Tuple<>(ETaskType.SETTER, "life", value / this.maxLife))));
+            CentralTaskManager.get().sendRequest(TaskFactory.createTask(ELocation.UNKNOWN, (this.team == 1 ? ELocation.GAME_GUI_State_AlliedPlayers : ELocation.GAME_GUI_State_EnemyPlayers), new Tuple<>(ETaskType.RELAY, this.getId() + GlobalVariable.id_delimiter + EGuiElement.STATE_PLAYER, new Tuple<>(ETaskType.SETTER, "life", value / this.maxLife))));
             return true;
         }
         return false;
